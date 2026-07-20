@@ -632,6 +632,64 @@ body::before {
 /* Completed timestamp — green tint */
 .task-ts-done    { color: var(--sage); font-weight: 600; }
 
+/* ── Dynamic Mini Calendar Badge ───────────────────────────────── */
+.mini-cal-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 20px;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line-mid, rgba(0, 0, 0, 0.18));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  vertical-align: middle;
+  margin-right: 5px;
+  flex-shrink: 0;
+  line-height: 1;
+  font-family: var(--font-ui, system-ui, sans-serif);
+  user-select: none;
+}
+
+.mini-cal-header {
+  background: var(--rust, var(--accent, #c2522a)); /* Theme color matching header banner! */
+  color: #ffffff;
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 1.5px 0 1px;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.mini-cal-body {
+  background: #ffffff;
+  color: #1a1a1a;
+  font-size: 9.5px;
+  font-weight: 800;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 1px;
+}
+
+/* Dark mode mini calendar badge */
+html.dark .mini-cal-badge {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+html.dark .mini-cal-header {
+  background: var(--dm-accent, var(--rust, #e06c3a));
+  color: #ffffff;
+}
+html.dark .mini-cal-body {
+  background: #242426;
+  color: #f0f0f0;
+}
+
 /* ── 15. Right side of task: badge + actions ────────────────────── */
 .task-right {
   display: flex;

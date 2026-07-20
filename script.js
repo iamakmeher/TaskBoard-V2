@@ -143,6 +143,23 @@ $(function () {
     return d.getDate() + ' ' + months[d.getMonth()];
   }
 
+  /**
+   * Dynamic Mini Calendar Badge Generator
+   * Top banner: Month (e.g. JUL), Bottom box: Day (e.g. 21)
+   * Header banner color dynamically uses active theme accent!
+   */
+  function renderCalendarBadge(ts) {
+    if (!ts) return '';
+    var d = new Date(ts);
+    var day = d.getDate();
+    var monthsShort = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    var month = monthsShort[d.getMonth()];
+    return '<span class="mini-cal-badge">' +
+             '<span class="mini-cal-header">' + month + '</span>' +
+             '<span class="mini-cal-body">' + day + '</span>' +
+           '</span>';
+  }
+
   /* ──────────────────────────────────────────────────────────────
      3b. TIME AGO
      Returns "2 hours ago", "just now", "3 days ago" etc.
@@ -279,15 +296,13 @@ $(function () {
     /* Clean vector SVG calendar icon (no static 17 graphic) */
     var calendarIconSvg = '<svg class="ts-calendar-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 
-    /* "Added" timestamp — shows clean SVG calendar icon + real date (e.g. 21 Jul) */
+    /* "Added" timestamp — shows dynamic mini calendar badge + relative time */
     if (task.createdAt) {
       var $created = $('<span class="task-ts task-ts-created">');
-      var dateStr = formatDateShort(task.createdAt);
-      var relStr  = timeAgo(task.createdAt);
-      var displayTs = relStr === 'just now' ? dateStr + ' (just now)' : dateStr + ' • ' + relStr;
+      var calBadge = renderCalendarBadge(task.createdAt);
+      var relStr   = timeAgo(task.createdAt);
       $created.html(
-        '<span class="task-ts-icon">' + calendarIconSvg + '</span>' +
-        'Added: ' + displayTs
+        calBadge + 'Added: ' + relStr
       );
       $ts.append($created);
     }
@@ -335,7 +350,7 @@ $(function () {
           // Never edited — show added date
           $subTs
             .addClass('subtask-ts-added')
-            .html(calendarIconSvg + ' Added: ' + formatDateShort(sub.createdAt) + ' • ' + timeAgo(sub.createdAt));
+            .html(renderCalendarBadge(sub.createdAt) + 'Added: ' + timeAgo(sub.createdAt));
         }
 
         // Sub-task action buttons (edit + delete) — hidden until hover
