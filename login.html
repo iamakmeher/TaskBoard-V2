@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — TaskBoard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="auth.css"/>
+</head>
+<body class="auth-body">
+
+  <!-- Background decoration -->
+  <div class="auth-bg" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       LOGIN CARD
+  ============================================================ -->
+  <div class="auth-wrap">
+    <div class="auth-card">
+
+      <!-- Logo / Brand -->
+      <div class="auth-brand">
+        <span class="auth-brand-dot"></span>
+        <span class="auth-brand-name">Task<em>Board</em></span>
+      </div>
+
+      <!-- Heading -->
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to access your tasks</p>
+      </div>
+
+      <!-- Error message box (hidden by default) -->
+      <div class="auth-error" id="auth-error" style="display:none">
+        <span class="auth-error-icon">⚠</span>
+        <span id="auth-error-msg">Something went wrong</span>
+      </div>
+
+      <!-- Success message box (hidden by default) -->
+      <div class="auth-success" id="auth-success" style="display:none">
+        <span>✓</span>
+        <span id="auth-success-msg">Login successful!</span>
+      </div>
+
+      <!-- ── GOOGLE SIGN IN BUTTON ─────────────────────────── -->
+      <!--
+        This button calls signInWithGoogle() in auth.js
+        Google handles everything — email, password, profile photo
+      -->
+      <button class="btn-google" id="btn-google-login">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+             alt="Google" class="google-icon"/>
+        Continue with Google
+      </button>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span class="auth-divider-line"></span>
+        <span class="auth-divider-text">or sign in with email</span>
+        <span class="auth-divider-line"></span>
+      </div>
+
+      <!-- ── EMAIL / PASSWORD FORM ─────────────────────────── -->
+      <div class="auth-form" id="login-form">
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input
+            type="email"
+            id="login-email"
+            class="form-input"
+            placeholder="yourname@gmail.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="login-password">
+            Password
+            <a href="#" class="form-link" id="forgot-password">Forgot password?</a>
+          </label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              id="login-password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <!-- Toggle show/hide password -->
+            <button class="btn-show-password" id="toggle-password" type="button">👁</button>
+          </div>
+        </div>
+
+        <!-- Login Button -->
+        <button class="btn-auth" id="btn-email-login">
+          <span id="login-btn-text">Sign In</span>
+          <span class="auth-spinner" id="login-spinner" style="display:none"></span>
+        </button>
+
+      </div>
+
+      <!-- Switch to Register -->
+      <p class="auth-switch">
+        Don't have an account?
+        <a href="register.html" class="auth-switch-link">Create account</a>
+      </p>
+
+    </div><!-- /auth-card -->
+
+    <!-- Footer -->
+    <p class="auth-footer">
+      TaskBoard · Your personal task manager
+    </p>
+
+  </div><!-- /auth-wrap -->
+
+  <!-- ── AUTH SCRIPT ──────────────────────────────────────────── -->
+  <script type="module" src="auth.js"></script>
+
+</body>
+</html>

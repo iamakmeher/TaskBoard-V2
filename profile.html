@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile — TaskBoard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="profile.css"/>
+</head>
+<body class="profile-body">
+
+  <div class="profile-bg" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <nav class="profile-nav">
+    <div class="profile-nav-inner">
+      <a href="index.html" class="btn-back">
+        <span class="btn-back-arrow">←</span>Back to TaskBoard
+      </a>
+      <div class="profile-nav-brand">
+        <span class="profile-nav-dot"></span>
+        <span class="profile-nav-name">Task<em>Board</em></span>
+      </div>
+      <button class="profile-theme-btn" id="profile-theme-btn" title="Toggle theme">
+        <span class="profile-theme-sun">☀️</span>
+        <span class="profile-theme-moon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="profile-main">
+
+    <!-- Loading -->
+    <div class="pf-loading" id="pf-loading">
+      <div class="pf-spinner"></div>
+      <p>Loading your profile…</p>
+    </div>
+
+    <div class="pf-content" id="pf-content" style="display:none">
+
+
+      <!-- ── HERO CARD — avatar click opens photo modal ── -->
+      <div class="pf-hero-card">
+
+        <!-- Clickable avatar with pencil overlay -->
+        <div class="pf-avatar-wrap" id="pf-avatar-wrap" role="button"
+             tabindex="0" title="Change profile photo" aria-label="Change profile photo">
+          <img  class="pf-avatar-img"      id="pf-avatar-img"      src="" alt="" style="display:none"/>
+          <span class="pf-avatar-initials" id="pf-avatar-initials"></span>
+          <!-- Pencil overlay shown on hover -->
+          <div class="pf-avatar-overlay">
+            <span class="pf-avatar-overlay-icon">✏️</span>
+            <span class="pf-avatar-overlay-text">Edit</span>
+          </div>
+        </div>
+
+        <div class="pf-hero-info">
+          <h1 class="pf-hero-name"     id="pf-hero-name">Loading…</h1>
+          <p  class="pf-hero-username" id="pf-hero-username"></p>
+          <p  class="pf-hero-email"    id="pf-hero-email"></p>
+          <p  class="pf-hero-since"    id="pf-hero-since"></p>
+          <span class="pf-login-badge" id="pf-login-badge">
+            <span id="pf-badge-icon">G</span>
+            <span id="pf-badge-text">Google Account</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- ── FORM CARDS ── -->
+      <div class="pf-cards">
+
+        <!-- Display Name -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Display Name</h2>
+          </div>
+          <p class="pf-card-desc">This is the name shown in your workspace header and profile.</p>
+          <div class="pf-field-row">
+            <input type="text" id="pf-name-input" class="pf-input"
+                   placeholder="Enter your display name…" maxlength="40"/>
+            <button class="pf-save-btn" id="pf-save-name">Save</button>
+          </div>
+          <div class="pf-feedback" id="pf-name-feedback" style="display:none"></div>
+        </div>
+
+        <!-- Username -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Username</h2>
+          </div>
+          <p class="pf-card-desc">Your unique handle on TaskBoard. Letters, numbers, _ and . only. Case sensitive.</p>
+          <div class="pf-field-row">
+            <div class="pf-input-prefix-wrap">
+              <span class="pf-input-prefix">@</span>
+              <input type="text" id="pf-username-input" class="pf-input pf-input-prefixed"
+                     placeholder="yourhandle" maxlength="30"
+                     autocomplete="off" spellcheck="false"/>
+            </div>
+            <button class="pf-save-btn" id="pf-save-username">Save</button>
+          </div>
+          <div class="pf-feedback" id="pf-username-feedback" style="display:none"></div>
+        </div>
+
+        <!-- Bio -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Bio</h2>
+          </div>
+          <p class="pf-card-desc">A short note about yourself.</p>
+          <div class="pf-bio-wrap">
+            <textarea id="pf-bio-input" class="pf-textarea"
+              placeholder="e.g. Designer, builder of things, perpetual list-maker…"
+              maxlength="160" rows="3"></textarea>
+            <div class="pf-bio-footer">
+              <span class="pf-char-count" id="pf-bio-count">0 / 160</span>
+              <button class="pf-save-btn pf-save-inline" id="pf-save-bio">Save</button>
+            </div>
+          </div>
+          <div class="pf-feedback" id="pf-bio-feedback" style="display:none"></div>
+        </div>
+
+        <!-- Personal Info -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Personal Info</h2>
+          </div>
+          <p class="pf-card-desc">Optional details — only visible to you.</p>
+          <div class="pf-two-col">
+            <div class="pf-sub-field">
+              <label class="pf-sub-label">Date of Birth</label>
+              <div class="pf-dob-row">
+                <div class="pf-dob-piece">
+                  <label class="pf-dob-tiny-label" for="dob-day">Day</label>
+                  <div class="pf-select-wrap">
+                    <select id="dob-day" class="pf-select pf-dob-select"><option value="">DD</option></select>
+                    <span class="pf-select-arrow">▾</span>
+                  </div>
+                </div>
+                <div class="pf-dob-piece pf-dob-month-piece">
+                  <label class="pf-dob-tiny-label" for="dob-month">Month</label>
+                  <div class="pf-select-wrap">
+                    <select id="dob-month" class="pf-select pf-dob-select">
+                      <option value="">MM</option>
+                      <option value="1">January</option><option value="2">February</option>
+                      <option value="3">March</option><option value="4">April</option>
+                      <option value="5">May</option><option value="6">June</option>
+                      <option value="7">July</option><option value="8">August</option>
+                      <option value="9">September</option><option value="10">October</option>
+                      <option value="11">November</option><option value="12">December</option>
+                    </select>
+                    <span class="pf-select-arrow">▾</span>
+                  </div>
+                </div>
+                <div class="pf-dob-piece">
+                  <label class="pf-dob-tiny-label" for="dob-year">Year</label>
+                  <div class="pf-select-wrap">
+                    <select id="dob-year" class="pf-select pf-dob-select"><option value="">YYYY</option></select>
+                    <span class="pf-select-arrow">▾</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pf-sub-field">
+              <label class="pf-sub-label" for="pf-gender-input">Gender</label>
+              <div class="pf-select-wrap">
+                <select id="pf-gender-input" class="pf-select">
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="nonbinary">Non-binary</option>
+                  <option value="other">Other</option>
+                </select>
+                <span class="pf-select-arrow">▾</span>
+              </div>
+            </div>
+          </div>
+          <div class="pf-save-row">
+            <button class="pf-save-btn" id="pf-save-personal">Save Personal Info</button>
+          </div>
+          <div class="pf-feedback" id="pf-personal-feedback" style="display:none"></div>
+        </div>
+
+        <!-- Email read-only -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Email Address <span class="pf-readonly-tag">read only</span></h2>
+          </div>
+          <p class="pf-card-desc">Managed by your login provider — cannot be changed here.</p>
+          <div class="pf-readonly-field" id="pf-email-display">—</div>
+        </div>
+
+        <!-- Account created -->
+        <div class="pf-card">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Account Created</h2>
+          </div>
+          <div class="pf-readonly-field" id="pf-created-display">—</div>
+        </div>
+
+        <!-- Change Password (email users only) -->
+        <div class="pf-card" id="pf-password-card" style="display:none">
+          <div class="pf-card-header">
+            <h2 class="pf-card-title">Change Password</h2>
+          </div>
+          <p class="pf-card-desc">Enter your new password below to update it instantly without being logged out.</p>
+          <div class="pf-field-row">
+            <input type="password" id="pf-new-pwd-input" class="pf-input" placeholder="Enter new password" minlength="6" autocomplete="new-password"/>
+            <button class="pf-save-btn" id="pf-save-pwd-btn">Update</button>
+          </div>
+          <div class="pf-feedback" id="pf-pwd-feedback" style="display:none"></div>
+        </div>
+
+        <!-- ── SIGN OUT — kept exactly as designed ── -->
+        <div class="pf-card pf-card-signout">
+          <div class="pf-signout-inner">
+            <div class="pf-signout-left">
+              <div class="pf-signout-icon-wrap">
+                <span class="pf-signout-icon">🚪</span>
+              </div>
+              <div>
+                <h2 class="pf-signout-title">Ready to leave?</h2>
+                <p class="pf-signout-desc">Your tasks are safely saved in the cloud.</p>
+              </div>
+            </div>
+            <button class="pf-signout-btn" id="pf-signout-btn">
+              <span class="pf-signout-btn-icon">↩</span>
+              <span class="pf-signout-btn-text" id="pf-signout-btn-text">Sign Out</span>
+              <span class="pf-signout-btn-sub">of TaskBoard</span>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /pf-cards -->
+    </div><!-- /pf-content -->
+  </main>
+
+  <!-- Populate DOB dropdowns -->
+  <script>
+    (function() {
+      const dayEl  = document.getElementById('dob-day');
+      const yearEl = document.getElementById('dob-year');
+      for (let d = 1; d <= 31; d++) {
+        const o = document.createElement('option');
+        o.value = String(d);
+        o.textContent = d < 10 ? '0' + d : String(d);
+        dayEl.appendChild(o);
+      }
+      const now = new Date().getFullYear();
+      for (let y = now; y >= 1920; y--) {
+        const o = document.createElement('option');
+        o.value = String(y); o.textContent = String(y);
+        yearEl.appendChild(o);
+      }
+    })();
+  </script>
+
+  <!-- PHOTO MODAL — at body root so z-index is never clipped -->
+<!-- ══════════════════════════════════════════════════
+     PROFILE PHOTO MODAL — lives outside cards
+══════════════════════════════════════════════════ -->
+<div class="photo-modal-overlay" id="photo-modal" style="display:none">
+  <div class="photo-modal" role="dialog" aria-modal="true" aria-label="Update profile photo">
+
+    <div class="photo-modal-header">
+      <h3 class="photo-modal-title">📷 Profile Photo</h3>
+      <button class="photo-modal-close" id="photo-modal-close" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Live preview -->
+    <div class="photo-preview-ring">
+      <div class="photo-preview-wrap" id="photo-preview-wrap">
+        <img  class="photo-preview-img"      id="photo-preview-img"  src="" alt="" crossorigin="anonymous" style="display:none"/>
+        <span class="photo-preview-initials" id="photo-preview-initials">?</span>
+        <!-- Square Crop Overlay -->
+        <div class="photo-crop-overlay" id="photo-crop-overlay" style="display:none; position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;">
+          <div class="photo-crop-box" style="position: absolute; left: 40px; top: 40px; width: 160px; height: 160px; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); outline: 9999px solid rgba(22,25,32,0.7); box-sizing: border-box;">
+            <!-- Faint circular guide inside the square -->
+            <div style="position: absolute; inset: 0; border: 1px dashed rgba(255,255,255,0.4); border-radius: 50%;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Upload progress ring overlay -->
+      <div class="photo-upload-progress" id="photo-upload-progress" style="display:none">
+        <div class="photo-progress-ring">
+          <svg viewBox="0 0 56 56">
+            <circle class="ppr-track" cx="28" cy="28" r="24"/>
+            <circle class="ppr-fill"  cx="28" cy="28" r="24" id="ppr-fill-circle"/>
+          </svg>
+          <span class="ppr-pct" id="ppr-pct">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zoom & Drag Controls -->
+    <div class="photo-crop-controls" id="photo-crop-controls" style="display:none; flex-direction:column; align-items:center; gap:8px; margin: 16px 0 8px;">
+      <span style="font-size:12px; color:var(--ink-soft); font-family:var(--font-ui);">Drag photo to position • Zoom to fit</span>
+      <div style="display:flex; align-items:center; gap:10px; width:80%;">
+        <span style="font-size:14px; user-select:none;">➖</span>
+        <input type="range" id="photo-zoom-slider" min="1" max="4" step="0.01" value="1" style="flex:1; accent-color:var(--rust); cursor:pointer; height:6px; border-radius:3px; background:var(--line);" />
+        <span style="font-size:14px; user-select:none;">➕</span>
+      </div>
+    </div>
+
+    <!-- 3 source options (no separate Remove — just re-upload) -->
+    <div class="photo-source-grid">
+
+      <!-- From Device -->
+      <label class="photo-source-btn" for="photo-file-input">
+        <span class="photo-source-icon">🖥️</span>
+        <span class="photo-source-label">From Device</span>
+        <input type="file" id="photo-file-input" accept="image/*" style="display:none"/>
+      </label>
+
+      <!-- Camera -->
+      <label class="photo-source-btn" for="photo-camera-input">
+        <span class="photo-source-icon">📷</span>
+        <span class="photo-source-label">Camera</span>
+        <input type="file" id="photo-camera-input" accept="image/*" capture="user" style="display:none"/>
+      </label>
+
+      <!-- From URL -->
+      <button class="photo-source-btn" id="photo-url-btn" type="button">
+        <span class="photo-source-icon">🔗</span>
+        <span class="photo-source-label">From URL</span>
+      </button>
+
+      <!-- Remove -->
+      <button class="photo-source-btn photo-source-remove" id="photo-remove-btn" type="button">
+        <span class="photo-source-icon">🗑️</span>
+        <span class="photo-source-label">Remove</span>
+      </button>
+
+    </div>
+
+    <!-- URL row — shown when URL button clicked -->
+    <div class="photo-url-row" id="photo-url-row" style="display:none">
+      <input type="url" id="photo-url-input" class="photo-url-input"
+             placeholder="https://example.com/photo.jpg"/>
+      <button class="photo-url-load" id="photo-url-load" type="button">Load</button>
+    </div>
+
+    <!-- Status messages -->
+    <p class="photo-crop-hint" id="photo-crop-hint" style="display:none">
+      ✓ Image ready — click <strong>Save Photo</strong> to apply.
+    </p>
+    <div class="pf-feedback pf-feedback-error" id="photo-error" style="display:none"></div>
+
+    <!-- Action buttons -->
+    <div class="photo-modal-actions">
+      <button class="photo-btn-cancel" id="photo-btn-cancel" type="button">Cancel</button>
+      <button class="photo-btn-save"   id="photo-btn-save"   type="button" disabled>
+        <span id="photo-save-label">Save Photo</span>
+        <span class="photo-save-spinner" id="photo-save-spinner" style="display:none"></span>
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- /photo modal -->
+
+  <!-- Apply saved accent color and theme immediately -->
+  <script>
+    (function() {
+      var COLORS = {
+        orange:{light:'#c2522a',dark:'#ff6a00'},teal:{light:'#0d9488',dark:'#14b8a6'},
+        blue:{light:'#2563eb',dark:'#3b82f6'},green:{light:'#16a34a',dark:'#22c55e'},
+        purple:{light:'#7c3aed',dark:'#a78bfa'},pink:{light:'#db2777',dark:'#f472b6'},
+        red:{light:'#dc2626',dark:'#f87171'},rose:{light:'#e11d48',dark:'#fb7185'},
+        amber:{light:'#d97706',dark:'#fbbf24'},yellow:{light:'#ca8a04',dark:'#facc15'},
+        lime:{light:'#65a30d',dark:'#a3e635'},emerald:{light:'#059669',dark:'#34d399'},
+        cyan:{light:'#0891b2',dark:'#22d3ee'},indigo:{light:'#4338ca',dark:'#818cf8'},
+        violet:{light:'#7c3aed',dark:'#c4b5fd'},fuchsia:{light:'#c026d3',dark:'#e879f9'},
+        slate:{light:'#475569',dark:'#94a3b8'},gold:{light:'#b45309',dark:'#fcd34d'}
+      };
+      try {
+        var s       = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
+        var isDark  = localStorage.getItem('taskboard-dark') === 'true';
+        var color   = s.color || 'teal';
+        if (isDark) document.documentElement.classList.add('dark');
+        var col  = COLORS[color] || COLORS.teal;
+        var c    = isDark ? col.dark : col.light;
+        var clit = c + '1a';
+        var chov = col.hover || c;
+        document.documentElement.style.setProperty('--accent',       c);
+        document.documentElement.style.setProperty('--accent-light', clit);
+        document.documentElement.style.setProperty('--accent-hover', chov);
+        document.documentElement.style.setProperty('--rust',         c);
+        document.documentElement.style.setProperty('--rust-light',   clit);
+        document.documentElement.style.setProperty('--rust-hover',   chov);
+      } catch(e) {}
+    })();
+  </script>
+  <script type="module" src="profile.js"></script>
+</body>
+</html>

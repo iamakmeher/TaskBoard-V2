@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — TaskBoard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="auth.css"/>
+</head>
+<body class="auth-body auth-body-scroll">
+
+  <!-- Background decoration -->
+  <div class="auth-bg" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       REGISTER CARD
+  ============================================================ -->
+  <div class="auth-wrap">
+    <div class="auth-card">
+
+      <!-- Logo / Brand -->
+      <div class="auth-brand">
+        <span class="auth-brand-dot"></span>
+        <span class="auth-brand-name">Task<em>Board</em></span>
+      </div>
+
+      <!-- Heading -->
+      <div class="auth-header">
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Start managing your Task's today</p>
+      </div>
+
+      <!-- Error message -->
+      <div class="auth-error" id="auth-error" style="display:none">
+        <span class="auth-error-icon">⚠</span>
+        <span id="auth-error-msg">Something went wrong</span>
+      </div>
+
+      <!-- Success message -->
+      <div class="auth-success" id="auth-success" style="display:none">
+        <span>✓</span>
+        <span id="auth-success-msg">Account created!</span>
+      </div>
+
+      <!-- ── GOOGLE REGISTER BUTTON ────────────────────────── -->
+      <!--
+        Registering with Google is the same as signing in.
+        If account doesn't exist, Firebase creates it automatically.
+      -->
+      <button class="btn-google" id="btn-google-register">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+             alt="Google" class="google-icon"/>
+        Continue with Google
+      </button>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span class="auth-divider-line"></span>
+        <span class="auth-divider-text">or register with email</span>
+        <span class="auth-divider-line"></span>
+      </div>
+
+      <!-- ── REGISTER FORM ──────────────────────────────────── -->
+      <div class="auth-form" id="register-form">
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Full Name</label>
+          <input
+            type="text"
+            id="reg-name"
+            class="form-input"
+            placeholder="Enter Your Name"
+            autocomplete="name"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email Address</label>
+          <input
+            type="email"
+            id="reg-email"
+            class="form-input"
+            placeholder="yourname@gmail.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              id="reg-password"
+              class="form-input"
+              placeholder="Minimum 6 characters"
+              autocomplete="new-password"
+            />
+            <button class="btn-show-password" id="toggle-reg-password" type="button">👁</button>
+          </div>
+          <!-- Password strength indicator -->
+          <div class="password-strength" id="password-strength">
+            <div class="strength-bar" id="strength-bar"></div>
+          </div>
+          <span class="strength-text" id="strength-text"></span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label" for="reg-confirm">Confirm Password</label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              id="reg-confirm"
+              class="form-input"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+            />
+            <button class="btn-show-password" id="toggle-confirm-password" type="button">👁</button>
+          </div>
+        </div>
+
+        <!-- Register Button -->
+        <button class="btn-auth" id="btn-email-register">
+          <span id="register-btn-text">Create Account</span>
+          <span class="auth-spinner" id="register-spinner" style="display:none"></span>
+        </button>
+
+      </div>
+
+      <!-- Switch to Login -->
+      <p class="auth-switch">
+        Already have an account?
+        <a href="login.html" class="auth-switch-link">Sign in</a>
+      </p>
+
+    </div><!-- /auth-card -->
+
+    <!-- Footer -->
+    <p class="auth-footer">
+      TaskBoard · Your personal task manager
+    </p>
+
+  </div><!-- /auth-wrap -->
+
+  <!-- ── AUTH SCRIPT ──────────────────────────────────────────── -->
+  <script type="module" src="auth.js"></script>
+
+</body>
+</html>

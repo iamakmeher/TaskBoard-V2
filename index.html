@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskBoard — jQuery Task Manager</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Caveat:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- jQuery 3.7.1 via CDN -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- Apply saved appearance settings immediately (before render) -->
+  <script>
+    (function () {
+      var COLORS = {
+        orange: { light: '#c2522a', dark: '#ff6a00', hover: '#a8421e' },
+        teal: { light: '#0d9488', dark: '#14b8a6', hover: '#0f766e' },
+        blue: { light: '#2563eb', dark: '#3b82f6', hover: '#1d4ed8' },
+        green: { light: '#16a34a', dark: '#22c55e', hover: '#15803d' },
+        purple: { light: '#7c3aed', dark: '#a78bfa', hover: '#6d28d9' },
+        pink: { light: '#db2777', dark: '#f472b6', hover: '#be185d' },
+        red: { light: '#dc2626', dark: '#f87171', hover: '#b91c1c' },
+        rose: { light: '#e11d48', dark: '#fb7185', hover: '#be123c' },
+        amber: { light: '#d97706', dark: '#fbbf24', hover: '#b45309' },
+        yellow: { light: '#ca8a04', dark: '#facc15', hover: '#a16207' },
+        lime: { light: '#65a30d', dark: '#a3e635', hover: '#4d7c0f' },
+        emerald: { light: '#059669', dark: '#34d399', hover: '#047857' },
+        cyan: { light: '#0891b2', dark: '#22d3ee', hover: '#0e7490' },
+        indigo: { light: '#4338ca', dark: '#818cf8', hover: '#3730a3' },
+        violet: { light: '#7c3aed', dark: '#c4b5fd', hover: '#6d28d9' },
+        fuchsia: { light: '#c026d3', dark: '#e879f9', hover: '#a21caf' },
+        slate: { light: '#475569', dark: '#94a3b8', hover: '#334155' },
+        gold: { light: '#b45309', dark: '#fcd34d', hover: '#92400e' }
+      };
+      var FONT_SIZES = { small: '13px', medium: '15px', large: '17px' };
+      var DENSITY = { compact: '8px', normal: '14px', comfortable: '22px' };
+      try {
+        var s = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
+        var theme = s.theme || 'light';
+        var color = s.color || 'teal';
+        var font = s.font || 'medium';
+        var density = s.density || 'normal';
+
+        // Theme
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var isDark = theme === 'dark' || (theme === 'system' && prefersDark);
+        if (isDark) document.documentElement.classList.add('dark');
+        localStorage.setItem('taskboard-dark', String(isDark));
+
+        // Accent color — set BOTH --accent AND --rust vars directly
+        var col = COLORS[color] || COLORS.teal;
+        var c = isDark ? col.dark : col.light;
+        var clit = c + '1a';
+        var chov = col.hover || c;
+        document.documentElement.style.setProperty('--accent', c);
+        document.documentElement.style.setProperty('--accent-light', clit);
+        document.documentElement.style.setProperty('--accent-hover', chov);
+        document.documentElement.style.setProperty('--rust', c);
+        document.documentElement.style.setProperty('--rust-light', clit);
+        document.documentElement.style.setProperty('--rust-hover', chov);
+        // Also set dark mode accent vars directly so dark mode works too
+        document.documentElement.style.setProperty('--dm-accent', c);
+        document.documentElement.style.setProperty('--dm-accent-2', chov);
+        document.documentElement.style.setProperty('--dm-accent-glow', c + '38');
+        document.documentElement.style.setProperty('--dm-accent-deep', c + '1a');
+
+        // Font size
+        document.documentElement.style.setProperty('--app-font-size', FONT_SIZES[font] || '15px');
+
+        // Density
+        document.documentElement.style.setProperty('--task-card-spacing', DENSITY[density] || '14px');
+
+      } catch (e) { }
+    })();
+  </script>
+
+  <!-- Auto-recover data from Firestore if localStorage is empty -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const app = initializeApp({
+      apiKey: "AIzaSyBY2V3W_I6ryyDh413MuOSQun8s2F5mevY",
+      authDomain: "taskboard-21e77.firebaseapp.com",
+      projectId: "taskboard-21e77",
+      storageBucket: "taskboard-21e77.firebasestorage.app",
+      messagingSenderId: "234189363705",
+      appId: "1:234189363705:web:54e1d8193594c182758528"
+    });
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+      const existing = localStorage.getItem('taskboard-tasks');
+      const parsed = existing ? JSON.parse(existing) : [];
+      // Only recover if localStorage is empty
+      if (parsed.length > 0) return;
+      try {
+        const snap = await getDocs(collection(db, 'users', user.uid, 'tasks'));
+        const tasks = [];
+        snap.forEach(d => tasks.push(d.data()));
+        if (tasks.length > 0) {
+          localStorage.setItem('taskboard-tasks', JSON.stringify(tasks));
+          const binSnap = await getDocs(collection(db, 'users', user.uid, 'bin'));
+          const bin = [];
+          binSnap.forEach(d => bin.push(d.data()));
+          localStorage.setItem('taskboard-bin', JSON.stringify(bin));
+          localStorage.setItem('taskboard-migrated-' + user.uid, 'true');
+          // Reload page so script.js picks up the restored tasks
+          window.location.reload();
+        }
+      } catch (e) { console.log('Auto-recovery skipped:', e.message); }
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <!-- Decorative paper texture layer -->
+  <div class="paper-texture" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       FULL-WIDTH PAGE WRAPPER (landscape website layout)
+  ============================================================ -->
+  <div class="page">
+
+    <!-- ── SITE HEADER / TOPBAR ─────────────────────────────────── -->
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand">
+          <span class="brand-dot"></span>
+          <span class="brand-name">Task<em>Board</em></span>
+          <span class="brand-tag" id="brand-workspace">My Workspace</span>
+        </div>
+
+        <!-- Summary pills in the top bar -->
+        <div class="summary-pills">
+          <div class="pill pill-total">
+            <span class="pill-num" id="count-total">0</span>
+            <span class="pill-label">Total</span>
+          </div>
+          <div class="pill pill-done">
+            <span class="pill-num" id="count-done">0</span>
+            <span class="pill-label">Done</span>
+          </div>
+          <div class="pill pill-left">
+            <span class="pill-num" id="count-left">0</span>
+            <span class="pill-label">Left</span>
+          </div>
+        </div>
+
+        <!-- Progress bar lives in header -->
+        <div class="progress-wrap" title="Completion progress">
+          <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+          <span class="progress-label" id="progress-label">0%</span>
+        </div>
+
+        <!-- Today's date -->
+        <span class="header-date" id="header-date"></span>
+
+        <!-- Dark Mode Toggle — simple icon button -->
+        <button class="theme-icon-btn" id="theme-toggle" title="Switch theme" aria-label="Toggle dark mode">
+          <span class="theme-sun">☀️</span>
+          <span class="theme-moon">🌙</span>
+        </button>
+
+        <!-- ── USER PROFILE ICON ──────────────────────────────── -->
+        <!--
+          Shows the logged-in user's photo (or initials if no photo).
+          Clicking opens the profile dropdown panel.
+        -->
+        <div class="profile-wrap" id="profile-wrap">
+
+          <!-- Profile Avatar Button -->
+          <button class="profile-avatar-btn" id="profile-avatar-btn" title="My Profile">
+            <!-- Photo shown if user has one (Google users) -->
+            <img class="profile-avatar-img" id="profile-avatar-img" src="" alt="" style="display:none" />
+            <!-- Initials shown if no photo -->
+            <span class="profile-avatar-initials" id="profile-avatar-initials">?</span>
+          </button>
+
+          <!-- ── PROFILE DROPDOWN PANEL ──────────────────────── -->
+          <div class="profile-dropdown" id="profile-dropdown" style="display:none">
+
+            <!-- User info at top — clicking opens profile page -->
+            <a class="profile-dropdown-header profile-dropdown-header-link" href="profile.html">
+              <div class="profile-dropdown-avatar-wrap" id="profile-dropdown-avatar-wrap">
+                <img class="profile-dropdown-img" id="profile-dropdown-img" src="" alt="" style="display:none" />
+                <span class="profile-dropdown-initials" id="profile-dropdown-initials">?</span>
+              </div>
+              <div class="profile-dropdown-info">
+                <span class="profile-dropdown-name" id="profile-dropdown-name">Loading…</span>
+                <span class="profile-dropdown-email" id="profile-dropdown-email"></span>
+              </div>
+            </a>
+
+            <div class="profile-dropdown-divider"></div>
+
+            <!-- Menu items -->
+            <ul class="profile-dropdown-menu">
+              <li>
+                <a class="profile-menu-item" href="profile.html" id="btn-open-profile">
+                  <span class="profile-menu-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                  </span>
+                  My Profile
+                </a>
+              </li>
+              <li>
+                <a class="profile-menu-item" href="settings.html" id="btn-open-settings">
+                  <span class="profile-menu-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                  </span>
+                  Settings
+                </a>
+              </li>
+            </ul>
+
+            <div class="profile-dropdown-divider"></div>
+
+            <!-- Logout -->
+            <button class="profile-menu-item profile-menu-logout" id="btn-logout">
+              <span class="profile-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </span>
+              Sign Out
+            </button>
+
+          </div><!-- /profile-dropdown -->
+
+        </div><!-- /profile-wrap -->
+
+        <!-- Recycle Bin button in topbar -->
+        <button class="btn-recycle-bin" id="btn-open-bin" title="Recycle Bin">
+          🗑
+          <span class="bin-badge" id="bin-badge" style="display:none">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         RECYCLE BIN OVERLAY PANEL
+    ══════════════════════════════════════════════════════════════ -->
+    <div class="bin-overlay" id="bin-overlay" style="display:none">
+      <div class="bin-panel">
+
+        <!-- Bin header -->
+        <div class="bin-header">
+          <div class="bin-header-left">
+            <span class="bin-header-icon">🗑</span>
+            <div>
+              <h2 class="bin-title">Recycle Bin</h2>
+              <p class="bin-subtitle">Deleted tasks are stored here. Restore or permanently delete them.</p>
+            </div>
+          </div>
+          <div class="bin-header-actions">
+            <button class="btn-bin-empty" id="btn-bin-empty">🗑 Empty Bin</button>
+            <button class="btn-bin-close" id="btn-bin-close">✕</button>
+          </div>
+        </div>
+
+        <!-- Bin Filter Bar -->
+        <div class="bin-filter-bar" id="bin-filter-bar">
+          <span class="bin-filter-label">Show tasks from:</span>
+          <select id="bin-board-filter" class="bin-board-filter">
+            <option value="all">All Boards</option>
+          </select>
+        </div>
+
+        <!-- Bin empty state -->
+        <div class="bin-empty-state" id="bin-empty-state">
+          <span class="bin-empty-icon">🪣</span>
+          <p class="bin-empty-title">Recycle Bin is Empty</p>
+          <p class="bin-empty-hint">Deleted tasks will appear here.</p>
+        </div>
+
+        <!-- Bin task list -->
+        <ul class="bin-list" id="bin-list"></ul>
+
+      </div>
+    </div>
+
+    <!-- Permanent Delete Confirmation Modal -->
+    <div class="confirm-overlay" id="confirm-overlay" style="display:none">
+      <div class="confirm-box">
+        <div class="confirm-icon">⚠️</div>
+        <h3 class="confirm-title">Delete Permanently?</h3>
+        <p class="confirm-msg" id="confirm-msg">This action cannot be undone.</p>
+        <div class="confirm-actions">
+          <button class="btn-confirm-cancel" id="btn-confirm-cancel">Cancel</button>
+          <button class="btn-confirm-delete" id="btn-confirm-delete">Delete Permanently</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MAIN TWO-COLUMN LAYOUT ─────────────────────────────────── -->
+    <div class="main-layout">
+
+      <!-- ════════════════════════════════════════════════════════════
+           LEFT PANEL — Add task + controls
+      ════════════════════════════════════════════════════════════ -->
+      <aside class="left-panel">
+
+        <div class="panel-section">
+          <!-- Heading changes between "Add New Task" and "Edit Task" mode -->
+          <h2 class="panel-heading" id="panel-heading">Add New Task</h2>
+
+          <!--
+            Edit mode banner — hidden by default.
+            Shows which task is being edited and a Cancel button.
+            script.js toggles this visible when edit button is clicked.
+          -->
+          <div class="edit-mode-banner" id="edit-mode-banner" style="display:none">
+            <span class="edit-mode-icon">✎</span>
+            <span class="edit-mode-label">Editing task</span>
+            <button class="btn-cancel-edit" id="btn-cancel-edit" title="Cancel edit">✕ Cancel</button>
+          </div>
+
+          <!-- Priority selector -->
+          <div class="priority-row">
+            <span class="priority-label">Priority</span>
+            <div class="priority-btns" id="priority-selector">
+              <button class="pri-btn" data-priority="low">🟢 Low</button>
+              <button class="pri-btn" data-priority="medium">🟡 Medium</button>
+              <button class="pri-btn" data-priority="high">🔴 High</button>
+            </div>
+          </div>
+
+          <!-- Task text input -->
+          <div class="input-stack">
+            <input type="text" id="task-input" class="task-input" placeholder="Write a task…" maxlength="376"
+              autocomplete="off" />
+
+            <!-- Description section — optional, collapsible -->
+            <div class="desc-toggle-row">
+              <button class="btn-desc-toggle" id="btn-desc-toggle" type="button">
+                <span class="desc-toggle-icon" id="desc-toggle-icon">＋</span>
+                Add Description <span class="desc-optional">(optional)</span>
+              </button>
+            </div>
+
+            <!--
+              Description textarea — hidden by default.
+              jQuery .slideToggle() shows/hides it when the toggle button is clicked.
+              If left empty, no description is stored on the task.
+            -->
+            <div class="desc-wrap" id="desc-wrap" style="display:none">
+              <textarea id="task-desc" class="task-desc"
+                placeholder="Each line = one sub-task (Enter = new sub-task, Shift+Enter = new line)&#10;- Add picture on page 1&#10;- Change topic heading"
+                rows="3"></textarea>
+
+            </div>
+
+            <!--
+              Hidden field stores the task ID being edited.
+              When empty = Add mode. When set = Edit/Save mode.
+            -->
+            <input type="hidden" id="editing-task-id" value="" />
+
+            <button class="btn-add" id="btn-add">
+              <span class="btn-add-icon" id="btn-add-icon">+</span>
+              <span id="btn-add-label">Add Task</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Boards section -->
+        <div class="panel-section">
+          <div class="boards-header">
+            <h2 class="panel-heading">Boards</h2>
+            <button class="btn-add-board-toggle" id="btn-add-board-toggle" title="Add new board" type="button">
+              <span class="board-toggle-icon" id="board-toggle-icon">＋</span>
+            </button>
+          </div>
+
+          <!-- Board creation input, hidden by default -->
+          <div class="board-add-wrap" id="board-add-wrap" style="display:none">
+            <div class="board-input-row">
+              <input type="text" id="board-input" class="board-input" placeholder="New board name…" maxlength="30"
+                autocomplete="off" />
+              <button class="btn-board-add" id="btn-board-add" type="button">＋</button>
+            </div>
+          </div>
+
+          <ul class="boards-list" id="boards-list">
+            <!-- Populated dynamically via jQuery -->
+          </ul>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Filter tabs -->
+        <div class="panel-section">
+          <h2 class="panel-heading">Filter</h2>
+          <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="active">Active</button>
+            <button class="filter-tab" data-filter="done">Completed</button>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Actions -->
+        <div class="panel-section">
+          <h2 class="panel-heading">Actions</h2>
+          <div class="action-btns">
+            <button class="btn-tool" id="btn-toggle-list">
+              <span id="toggle-icon">▾</span> Hide List
+            </button>
+            <button class="btn-tool" id="btn-collapse-done">
+              🙈 Hide Completed
+            </button>
+            <!-- Export Buttons -->
+            <button class="btn-tool btn-export" id="btn-export-pdf" onclick="window.exportPDF && window.exportPDF()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="12" y1="18" x2="12" y2="12" />
+                <line x1="9" y1="15" x2="15" y2="15" />
+              </svg>
+              Export PDF
+            </button>
+            <button class="btn-tool btn-export" id="btn-export-csv" onclick="window.exportCSV && window.exportCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              Export CSV
+            </button>
+            <button class="btn-tool btn-danger" id="btn-clear-all">
+              ✕ Clear All
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ════════════════════════════════════════════════════════════
+           RIGHT PANEL — Search + Task list
+      ════════════════════════════════════════════════════════════ -->
+      <main class="right-panel">
+
+        <!-- Search bar -->
+        <div class="search-bar">
+          <div class="search-box">
+            <span class="search-icon">⌕</span>
+            <input type="text" id="search-input" class="search-input" placeholder="Filter tasks by name…" />
+            <button class="btn-clear-search" id="btn-clear-search" title="Clear filter">✕</button>
+          </div>
+        </div>
+
+        <!-- Task list area -->
+        <div id="task-list-wrap">
+
+          <!-- Empty state -->
+          <div class="empty-state" id="empty-state">
+            <span class="empty-icon">✏️</span>
+            <p class="empty-title">Nothing here yet</p>
+            <p class="empty-hint">Add your first task on the left to get started.</p>
+          </div>
+
+          <!--
+            The <ul> — jQuery .on() delegation is bound here.
+            All task <li> items are appended dynamically.
+          -->
+          <ul class="task-list" id="task-list"></ul>
+
+        </div>
+
+      </main>
+
+    </div><!-- /main-layout -->
+
+    <!-- ── FOOTER — only date, no "Tasks saved" text ─────────────── -->
+    <footer class="app-footer">
+      <span id="footer-date"></span>
+    </footer>
+
+  </div><!-- /page -->
+
+  <!-- Toast notifications -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!--
+    Firebase Sync — loads firestore-sync.js FIRST.
+    It checks auth, runs migration if needed,
+    loads tasks from Firestore into localStorage,
+    then signals script.js to initialize.
+  -->
+  <script type="module" src="firestore-sync.js"></script>
+
+  <script src="script.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CUSTOM DELETE CONFIRM MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="del-modal-overlay" id="del-modal-overlay" style="display:none">
+    <div class="del-modal" role="dialog" aria-modal="true">
+      <div class="del-modal-icon">🗑️</div>
+      <h2 class="del-modal-title">Delete Task?</h2>
+      <p class="del-modal-task-name" id="del-modal-task-name"></p>
+      <p class="del-modal-desc">This task will be moved to the Recycle Bin. You can restore it from there.</p>
+      <div class="del-modal-actions">
+        <button class="del-modal-btn del-modal-cancel" id="del-modal-cancel">✕ Cancel</button>
+        <button class="del-modal-btn del-modal-confirm" id="del-modal-confirm">🗑 Move to Bin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CUSTOM RESTORE CONFIRM MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="del-modal-overlay" id="restore-modal-overlay" style="display:none">
+    <div class="del-modal" role="dialog" aria-modal="true">
+      <div class="del-modal-icon restore-modal-icon">↩</div>
+      <h2 class="del-modal-title">Restore Task</h2>
+      <p class="del-modal-task-name" id="restore-modal-task-name"></p>
+      
+      <div class="restore-select-container" style="text-align: left; margin: 16px 0;">
+        <label for="restore-board-select" style="display: block; font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px;">Restore to Board:</label>
+        <select id="restore-board-select" style="width: 100%; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--parchment-2); color: var(--ink); font-family: var(--font-ui); font-size: 14px; font-weight: 600; outline: none; cursor: pointer; transition: border-color .18s ease;"></select>
+      </div>
+
+      <p class="del-modal-desc" id="restore-modal-desc" style="margin-bottom: 24px;"></p>
+      
+      <div class="del-modal-actions">
+        <button class="del-modal-btn del-modal-cancel" id="restore-modal-cancel">✕ Cancel</button>
+        <button class="del-modal-btn del-modal-confirm restore-modal-confirm" id="restore-modal-confirm">↩ Restore</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

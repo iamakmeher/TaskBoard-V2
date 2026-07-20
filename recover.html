@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/><title>Get Data Back</title>
+<style>
+body{font-family:sans-serif;background:#0f0f1a;color:#fff;text-align:center;padding:40px 20px;min-height:100vh}
+h2{font-size:26px;margin-bottom:8px}
+p{color:#aaa;margin-bottom:24px}
+.box{background:#1a1a2e;border-radius:16px;padding:32px;max-width:600px;margin:0 auto;text-align:left}
+.task{background:#16213e;border-radius:8px;padding:12px 16px;margin:6px 0;font-size:14px}
+.done{text-decoration:line-through;color:#666}
+.btn{display:inline-block;background:#4caf50;color:#fff;border:none;padding:14px 32px;border-radius:99px;font-size:18px;font-weight:700;cursor:pointer;text-decoration:none;margin-top:20px;width:100%;text-align:center}
+.status{font-size:18px;margin:16px 0;padding:16px;border-radius:12px;background:#1a1a2e}
+</style>
+</head>
+<body>
+<h2>📦 Checking your data...</h2>
+<div class="box">
+  <div class="status" id="status">Connecting to Firebase...</div>
+  <div id="tasklist"></div>
+  <div id="action"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const status   = document.getElementById('status');
+const tasklist = document.getElementById('tasklist');
+const action   = document.getElementById('action');
+
+const app  = initializeApp({
+  apiKey:"AIzaSyBY2V3W_I6ryyDh413MuOSQun8s2F5mevY",
+  authDomain:"taskboard-21e77.firebaseapp.com",
+  projectId:"taskboard-21e77",
+  storageBucket:"taskboard-21e77.firebasestorage.app",
+  messagingSenderId:"234189363705",
+  appId:"1:234189363705:web:54e1d8193594c182758528"
+});
+
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    status.innerHTML = '❌ Not logged in. <a href="login.html" style="color:#4af">Login first</a>';
+    return;
+  }
+
+  status.innerHTML = '⏳ Logged in as <b>' + user.email + '</b>. Loading...';
+
+  try {
+    const snap  = await getDocs(collection(db,'users',user.uid,'tasks'));
+    const tasks = [];
+    snap.forEach(d => tasks.push(d.data()));
+
+    const binSnap = await getDocs(collection(db,'users',user.uid,'bin'));
+    const bin = [];
+    binSnap.forEach(d => bin.push(d.data()));
+
+    if (tasks.length > 0) {
+      // SAVE TO LOCALSTORAGE
+      localStorage.setItem('taskboard-tasks', JSON.stringify(tasks));
+      localStorage.setItem('taskboard-bin',   JSON.stringify(bin));
+      localStorage.setItem('taskboard-migrated-'+user.uid,'true');
+
+      status.innerHTML = '✅ <b style="color:#4caf50">Found ' + tasks.length + ' tasks in Firestore!</b>';
+      tasklist.innerHTML = '<p style="color:#aaa;margin:16px 0 8px">Your tasks:</p>' +
+        tasks.slice(0,8).map(t =>
+          '<div class="task '+(t.completed?'done':'')+'">'+(t.completed?'✓ ':'')+t.text+'</div>'
+        ).join('') +
+        (tasks.length > 8 ? '<div class="task" style="color:#aaa">...and '+(tasks.length-8)+' more</div>' : '');
+      action.innerHTML = '<a class="btn" href="index.html">✅ Go to TaskBoard — Get My Data Back!</a>';
+
+    } else {
+      status.innerHTML = '⚠️ Firestore has <b style="color:#e94560">0 tasks</b> for your account.';
+      tasklist.innerHTML = '<p style="color:#aaa;margin-top:16px">This means your data was stored only in this browser\'s localStorage and got cleared when you replaced files.</p>' +
+        '<p style="color:#aaa;margin-top:8px">Unfortunately if localStorage is empty and Firestore is empty, the data cannot be recovered.</p>';
+      action.innerHTML = '<a class="btn" style="background:#555" href="index.html">Start Fresh in TaskBoard</a>';
+    }
+
+  } catch(e) {
+    status.innerHTML = '❌ Firebase Error: <b style="color:#e94560">' + e.message + '</b>';
+    action.innerHTML = '<p style="color:#aaa;margin-top:16px">Fix your Firebase rules — go to <a href="https://console.firebase.google.com/project/taskboard-21e77/firestore/databases/-default-/rules" target="_blank" style="color:#4af">Firebase Console → Rules</a> and paste:<br><br>' +
+      '<code style="background:#111;padding:12px;border-radius:8px;display:block;font-size:12px;margin-top:8px">' +
+      'rules_version = \'2\';<br>service cloud.firestore {<br>' +
+      '&nbsp;&nbsp;match /databases/{database}/documents {<br>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;match /{document=**} {<br>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if request.auth != null;<br>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>}' +
+      '</code><br>' +
+      '<a class="btn" style="background:#e94560;margin-top:8px" href="recover.html">Try Again</a>';
+  }
+});
+</script>
+</body>
+</html>

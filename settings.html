@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings — TaskBoard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="settings.css"/>
+</head>
+<body class="settings-body">
+
+  <div class="settings-bg" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <nav class="settings-nav">
+    <div class="settings-nav-inner">
+      <a href="index.html" class="btn-back" data-i18n="back_to_tb">
+        <span class="btn-back-arrow">←</span>Back to TaskBoard
+      </a>
+      <div class="settings-nav-brand">
+        <span class="settings-nav-dot"></span>
+        <span class="settings-nav-name">Task<em>Board</em></span>
+      </div>
+      <button class="settings-theme-btn" id="settings-theme-btn" title="Toggle theme" data-i18n-title="switch_theme">
+        <span class="settings-theme-sun">☀️</span>
+        <span class="settings-theme-moon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="settings-main">
+
+    <!-- Page Title -->
+    <div class="settings-page-header">
+      <h1 class="settings-page-title" data-i18n="settings">Settings</h1>
+      <p class="settings-page-desc" data-i18n="settings_page_desc">Customize how TaskBoard looks and feels for you.</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 1 — THEME
+    ══════════════════════════════════════════ -->
+    <section class="settings-section">
+      <div class="settings-section-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M8 12a4 4 0 0 1 8 0"/></svg>
+        Appearance
+      </div>
+
+      <!-- Theme Mode -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              Theme Mode
+            </h2>
+          <p class="settings-card-desc">Choose between light and dark mode.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="theme-toggle-group" id="theme-toggle-group">
+            <button class="theme-opt" data-theme="light">
+              <span class="theme-opt-icon">☀️</span>
+              <span class="theme-opt-label">Light</span>
+            </button>
+            <button class="theme-opt" data-theme="dark">
+              <span class="theme-opt-icon">🌙</span>
+              <span class="theme-opt-label">Dark</span>
+            </button>
+            <button class="theme-opt" data-theme="system">
+              <span class="theme-opt-icon">💻</span>
+              <span class="theme-opt-label">System</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accent Color -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.477-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              Accent Color
+            </h2>
+          <p class="settings-card-desc">The primary color used for buttons, highlights and active states.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="color-grid" id="color-grid">
+            <button class="color-swatch" data-color="orange"    style="--swatch:#c2522a"><span class="swatch-dot"></span><span class="swatch-label">Orange</span></button>
+            <button class="color-swatch" data-color="teal"      style="--swatch:#0d9488"><span class="swatch-dot"></span><span class="swatch-label">Teal</span></button>
+            <button class="color-swatch" data-color="blue"      style="--swatch:#2563eb"><span class="swatch-dot"></span><span class="swatch-label">Blue</span></button>
+            <button class="color-swatch" data-color="green"     style="--swatch:#16a34a"><span class="swatch-dot"></span><span class="swatch-label">Green</span></button>
+            <button class="color-swatch" data-color="purple"    style="--swatch:#7c3aed"><span class="swatch-dot"></span><span class="swatch-label">Purple</span></button>
+            <button class="color-swatch" data-color="pink"      style="--swatch:#db2777"><span class="swatch-dot"></span><span class="swatch-label">Pink</span></button>
+            <button class="color-swatch" data-color="red"       style="--swatch:#dc2626"><span class="swatch-dot"></span><span class="swatch-label">Red</span></button>
+            <button class="color-swatch" data-color="rose"      style="--swatch:#e11d48"><span class="swatch-dot"></span><span class="swatch-label">Rose</span></button>
+            <button class="color-swatch" data-color="amber"     style="--swatch:#d97706"><span class="swatch-dot"></span><span class="swatch-label">Amber</span></button>
+            <button class="color-swatch" data-color="yellow"    style="--swatch:#ca8a04"><span class="swatch-dot"></span><span class="swatch-label">Yellow</span></button>
+            <button class="color-swatch" data-color="lime"      style="--swatch:#65a30d"><span class="swatch-dot"></span><span class="swatch-label">Lime</span></button>
+            <button class="color-swatch" data-color="emerald"   style="--swatch:#059669"><span class="swatch-dot"></span><span class="swatch-label">Emerald</span></button>
+            <button class="color-swatch" data-color="cyan"      style="--swatch:#0891b2"><span class="swatch-dot"></span><span class="swatch-label">Cyan</span></button>
+            <button class="color-swatch" data-color="indigo"    style="--swatch:#4338ca"><span class="swatch-dot"></span><span class="swatch-label">Indigo</span></button>
+            <button class="color-swatch" data-color="violet"    style="--swatch:#7c3aed"><span class="swatch-dot"></span><span class="swatch-label">Violet</span></button>
+            <button class="color-swatch" data-color="fuchsia"   style="--swatch:#c026d3"><span class="swatch-dot"></span><span class="swatch-label">Fuchsia</span></button>
+            <button class="color-swatch" data-color="slate"     style="--swatch:#475569"><span class="swatch-dot"></span><span class="swatch-label">Slate</span></button>
+            <button class="color-swatch" data-color="gold"      style="--swatch:#b45309"><span class="swatch-dot"></span><span class="swatch-label">Gold</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Font Size -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              Font Size
+            </h2>
+          <p class="settings-card-desc">Adjust the text size across the entire app.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="font-size-group" id="font-size-group">
+            <button class="font-size-opt" data-size="small">
+              <span class="font-size-preview" style="font-size:12px">Aa</span>
+              <span class="font-size-label">Small</span>
+            </button>
+            <button class="font-size-opt" data-size="medium">
+              <span class="font-size-preview" style="font-size:15px">Aa</span>
+              <span class="font-size-label">Medium</span>
+            </button>
+            <button class="font-size-opt" data-size="large">
+              <span class="font-size-preview" style="font-size:19px">Aa</span>
+              <span class="font-size-label">Large</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Card Density -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              Task Card Density
+            </h2>
+          <p class="settings-card-desc">Control how much spacing is shown between task cards.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="density-group" id="density-group">
+            <button class="density-opt" data-density="compact">
+              <span class="density-bars density-compact">
+                <span></span><span></span><span></span>
+              </span>
+              <span class="density-label">Compact</span>
+            </button>
+            <button class="density-opt" data-density="normal">
+              <span class="density-bars density-normal">
+                <span></span><span></span><span></span>
+              </span>
+              <span class="density-label">Normal</span>
+            </button>
+            <button class="density-opt" data-density="comfortable">
+              <span class="density-bars density-comfortable">
+                <span></span><span></span>
+              </span>
+              <span class="density-label">Comfortable</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 2 — PREVIEW
+    ══════════════════════════════════════════ -->
+    <section class="settings-section">
+      <div class="settings-section-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Live Preview
+      </div>
+
+      <div class="settings-card preview-card">
+        <div class="preview-task-item">
+          <div class="preview-checkbox"></div>
+          <div class="preview-task-content">
+            <span class="preview-task-text">Design the new landing page</span>
+            <span class="preview-task-date">Added: Today, 10:30 AM</span>
+          </div>
+          <span class="preview-badge">HIGH</span>
+        </div>
+        <div class="preview-task-item preview-task-done">
+          <div class="preview-checkbox preview-checked">✓</div>
+          <div class="preview-task-content">
+            <span class="preview-task-text preview-strikethrough">Write project proposal</span>
+            <span class="preview-task-date">Done: Today, 9:15 AM</span>
+          </div>
+          <span class="preview-badge preview-badge-low">LOW</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 3 — TASK PREFERENCES
+    ══════════════════════════════════════════ -->
+    <section class="settings-section">
+      <div class="settings-section-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Task Preferences
+      </div>
+
+      <!-- Sort Order -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              Default Sort Order
+            </h2>
+          <p class="settings-card-desc">How tasks are ordered when you open the app.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="pref-select-wrap">
+            <select class="pref-select" id="pref-sort">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="priority">Priority (High → Low)</option>
+              <option value="priority-asc">Priority (Low → High)</option>
+              <option value="az">Alphabetical (A–Z)</option>
+              <option value="done-last">Completed Last</option>
+            </select>
+            <span class="pref-select-arrow">▾</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Default Priority -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Default Priority
+            </h2>
+          <p class="settings-card-desc">Pre-selected priority when adding a new task.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="pref-select-wrap">
+            <select class="pref-select" id="pref-priority">
+              <option value="none">⚪ None</option>
+              <option value="low">🟢 Low</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="high">🔴 High</option>
+            </select>
+            <span class="pref-select-arrow">▾</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show Timestamps -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Timestamp Format
+            </h2>
+          <p class="settings-card-desc">How dates appear on task cards.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="pref-select-wrap">
+            <select class="pref-select" id="pref-timestamp">
+              <option value="timeago">⏱ Time ago (2 hrs ago)</option>
+              <option value="full">📅 Full date (23/05/2026)</option>
+              <option value="short">📆 Short (23 May)</option>
+            </select>
+            <span class="pref-select-arrow">▾</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-hide completed -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed Tasks
+            </h2>
+          <p class="settings-card-desc">Automatically hide completed tasks when the page loads.</p>
+        </div>
+        <div class="settings-card-right">
+          <label class="pref-toggle-wrap">
+            <input type="checkbox" id="pref-hide-done" class="pref-toggle-input"/>
+            <span class="pref-toggle-track">
+              <span class="pref-toggle-thumb"></span>
+            </span>
+            <span class="pref-toggle-label" id="pref-hide-done-label">Off</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Confirm before delete -->
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+              <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Confirm Before Delete
+            </h2>
+          <p class="settings-card-desc">Show a confirmation before moving a task to the recycle bin.</p>
+        </div>
+        <div class="settings-card-right">
+          <label class="pref-toggle-wrap">
+            <input type="checkbox" id="pref-confirm-delete" class="pref-toggle-input"/>
+            <span class="pref-toggle-track">
+              <span class="pref-toggle-thumb"></span>
+            </span>
+            <span class="pref-toggle-label" id="pref-confirm-delete-label">Off</span>
+          </label>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 4 — DATA EXPORT
+    ══════════════════════════════════════════ -->
+    <section class="settings-section">
+      <div class="settings-section-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Data Export
+      </div>
+
+      <div class="settings-card">
+        <div class="settings-card-left">
+          <h2 class="settings-card-title">
+            <svg class="card-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Export Tasks
+          </h2>
+          <p class="settings-card-desc">Download all your tasks as a formatted PDF report or a CSV spreadsheet.</p>
+        </div>
+        <div class="settings-card-right">
+          <div class="export-btn-group">
+            <button class="export-btn export-btn-pdf" id="settings-export-pdf">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              <div>
+                <div class="export-btn-label">Export as PDF</div>
+                <div class="export-btn-sub">Formatted printable report</div>
+              </div>
+            </button>
+            <button class="export-btn export-btn-csv" id="settings-export-csv">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <div>
+                <div class="export-btn-label">Export as CSV</div>
+                <div class="export-btn-sub">Open in Excel or Sheets</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         RESET BUTTON
+    ══════════════════════════════════════════ -->
+    <div class="settings-reset-row">
+      <button class="settings-reset-btn" id="settings-reset-btn">
+        ↺ Reset to Defaults
+      </button>
+      <span class="settings-saved-note" id="settings-saved-note" style="display:none">
+        ✓ Settings saved
+      </span>
+    </div>
+
+  </main>
+
+  <!-- Apply saved accent color immediately before render -->
+  <script>
+    (function() {
+      var __TBCOLORS = {
+        orange:{light:'#c2522a',dark:'#ff6a00',hover:'#a8421e'},
+        teal:{light:'#0d9488',dark:'#14b8a6',hover:'#0f766e'},
+        blue:{light:'#2563eb',dark:'#3b82f6',hover:'#1d4ed8'},
+        green:{light:'#16a34a',dark:'#22c55e',hover:'#15803d'},
+        purple:{light:'#7c3aed',dark:'#a78bfa',hover:'#6d28d9'},
+        pink:{light:'#db2777',dark:'#f472b6',hover:'#be185d'},
+        red:{light:'#dc2626',dark:'#f87171',hover:'#b91c1c'},
+        rose:{light:'#e11d48',dark:'#fb7185',hover:'#be123c'},
+        amber:{light:'#d97706',dark:'#fbbf24',hover:'#b45309'},
+        yellow:{light:'#ca8a04',dark:'#facc15',hover:'#a16207'},
+        lime:{light:'#65a30d',dark:'#a3e635',hover:'#4d7c0f'},
+        emerald:{light:'#059669',dark:'#34d399',hover:'#047857'},
+        cyan:{light:'#0891b2',dark:'#22d3ee',hover:'#0e7490'},
+        indigo:{light:'#4338ca',dark:'#818cf8',hover:'#3730a3'},
+        violet:{light:'#7c3aed',dark:'#c4b5fd',hover:'#6d28d9'},
+        fuchsia:{light:'#c026d3',dark:'#e879f9',hover:'#a21caf'},
+        slate:{light:'#475569',dark:'#94a3b8',hover:'#334155'},
+        gold:{light:'#b45309',dark:'#fcd34d',hover:'#92400e'}
+      };
+      try {
+        var s     = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
+        var isDark= localStorage.getItem('taskboard-dark') === 'true';
+        var color = s.color || 'teal';
+        var col   = __TBCOLORS[color] || __TBCOLORS.teal;
+        var c     = isDark ? col.dark : col.light;
+        var clit  = c + '1a';
+        var chov  = col.hover || c;
+        var r = document.documentElement.style;
+        r.setProperty('--accent',      c);
+        r.setProperty('--accent-light',clit);
+        r.setProperty('--accent-hover',chov);
+        r.setProperty('--rust',        c);
+        r.setProperty('--rust-light',  clit);
+        r.setProperty('--rust-hover',  chov);
+      } catch(e) {}
+    })();
+  </script>
+  <script src="settings.js"></script>
+</body>
+</html>

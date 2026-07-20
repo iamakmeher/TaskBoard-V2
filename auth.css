@@ -1,0 +1,512 @@
+/* ================================================================
+   auth.css — Login & Register Page Styles
+   Always starts in LIGHT mode
+   Both pages support dark/light theme toggle
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&family=DM+Sans:wght@400;500;700&display=swap');
+
+/* ── 1. Variables ───────────────────────────────────────────────── */
+:root {
+  --bg:           #f5f2eb;
+  --bg-2:         #ede9df;
+  --card:         #fdfaf3;
+  --border:       #ddd0b8;
+  --border-mid:   #c8b898;
+  --text:         #2c2416;
+  --text-mid:     #5a4a32;
+  --text-soft:    #8a7560;
+  --text-faint:   #b8a88c;
+  --rust:         #c2522a;
+  --rust-light:   #f5ded5;
+  --rust-hover:   #a8421e;
+  --sage:         #4d7a5a;
+  --line:         #ddd0b8;
+  --shadow:       0 4px 24px rgba(44,36,22,.10), 0 1px 4px rgba(44,36,22,.06);
+  --shadow-lg:    0 8px 48px rgba(44,36,22,.14), 0 2px 8px rgba(44,36,22,.08);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui:      'DM Sans', sans-serif;
+  --r:            8px;
+  --r-lg:         16px;
+  --r-xl:         24px;
+  --t:            .2s ease;
+}
+
+/* Dark mode variables */
+.dark-mode {
+  --bg:         #0c0c0f;
+  --bg-2:       #111116;
+  --card:       #16161d;
+  --border:     rgba(255,255,255,.08);
+  --border-mid: rgba(255,255,255,.14);
+  --text:       #f0eee8;
+  --text-mid:   #a09a90;
+  --text-soft:  #6b6560;
+  --text-faint: #3d3a36;
+  --rust:       #ff6a00;
+  --rust-light: rgba(255,106,0,.1);
+  --rust-hover: #ff8c38;
+  --line:       rgba(255,255,255,.08);
+  --shadow:     0 4px 24px rgba(0,0,0,.4);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,.5);
+}
+
+/* ── 2. Reset ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── 3. Body ────────────────────────────────────────────────────── */
+.auth-body {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--t), color var(--t);
+}
+
+/* ── 4. Background decoration ───────────────────────────────────── */
+.auth-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 10%, rgba(255,220,160,.25) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 60% at 85% 85%, rgba(200,180,130,.18) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(180,155,110,.06) 28px, rgba(180,155,110,.06) 29px),
+    repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(180,155,110,.04) 28px, rgba(180,155,110,.04) 29px);
+  background-color: var(--bg);
+  pointer-events: none;
+}
+
+.dark-mode .auth-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(255,106,0,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 85%, rgba(130,80,255,.05) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,.015) 28px, rgba(255,255,255,.015) 29px);
+  background-color: var(--bg);
+}
+
+/* ── 5. Auth Wrap ───────────────────────────────────────────────── */
+.auth-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── 6. Auth Card ───────────────────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 36px 36px 32px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: cardRise .5s cubic-bezier(.22,1,.36,1) both;
+  transition: background var(--t), border-color var(--t);
+}
+
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(24px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── 7. Brand ───────────────────────────────────────────────────── */
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-brand-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--rust);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(194,82,42,.2);
+  animation: dotPulse 2.5s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%,100% { box-shadow: 0 0 0 3px rgba(194,82,42,.2); }
+  50%      { box-shadow: 0 0 0 6px rgba(194,82,42,.08); }
+}
+
+.auth-brand-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+.auth-brand-name em {
+  font-style: normal;
+  color: var(--rust);
+}
+
+/* ── 8. Auth Header ─────────────────────────────────────────────── */
+.auth-header { text-align: left; }
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* ── 9. Error / Success Messages ────────────────────────────────── */
+.auth-error,
+.auth-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r);
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideDown .25s ease both;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-error {
+  background: rgba(194,82,42,.08);
+  border: 1px solid rgba(194,82,42,.25);
+  color: var(--rust);
+}
+.auth-error-icon { font-size: 16px; flex-shrink: 0; }
+
+.auth-success {
+  background: rgba(77,122,90,.08);
+  border: 1px solid rgba(77,122,90,.25);
+  color: var(--sage);
+}
+
+/* ── 10. Google Button ──────────────────────────────────────────── */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 20px;
+  background: var(--card);
+  border: 1.5px solid var(--border-mid);
+  border-radius: var(--r-lg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--t);
+  box-shadow: var(--shadow);
+}
+.btn-google:hover {
+  border-color: #4285f4;
+  box-shadow: 0 0 0 3px rgba(66,133,244,.12), var(--shadow);
+  transform: translateY(-1px);
+}
+.btn-google:active { transform: scale(.98); }
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ── 11. Divider ────────────────────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.auth-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.auth-divider-text {
+  font-size: 12px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+/* ── 12. Form ───────────────────────────────────────────────────── */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-link {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--rust);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.form-link:hover { text-decoration: underline; }
+
+.form-input {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+  outline: none;
+  width: 100%;
+  transition: border-color var(--t), box-shadow var(--t), background var(--t);
+}
+.form-input::placeholder { color: var(--text-faint); }
+.form-input:focus {
+  border-color: var(--rust);
+  background: var(--card);
+  box-shadow: 0 0 0 4px rgba(194,82,42,.1);
+}
+
+/* Password input with show/hide button */
+.input-password-wrap {
+  position: relative;
+}
+.input-password-wrap .form-input {
+  padding-right: 44px;
+}
+.btn-show-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-faint);
+  padding: 4px;
+  transition: color var(--t);
+  line-height: 1;
+}
+.btn-show-password:hover { color: var(--text); }
+
+/* ── 13. Password Strength ──────────────────────────────────────── */
+.password-strength {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.strength-bar {
+  height: 100%;
+  border-radius: 99px;
+  width: 0%;
+  transition: width .3s ease, background .3s ease;
+}
+.strength-text {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Strength levels */
+.strength-weak   .strength-bar { width: 33%; background: #ef4444; }
+.strength-medium .strength-bar { width: 66%; background: #f59e0b; }
+.strength-strong .strength-bar { width: 100%; background: #10b981; }
+.strength-weak   .strength-text { color: #ef4444; }
+.strength-medium .strength-text { color: #f59e0b; }
+.strength-strong .strength-text { color: #10b981; }
+
+/* ── 14. Auth Submit Button ─────────────────────────────────────── */
+.btn-auth {
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--rust);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-lg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all var(--t);
+  box-shadow: 0 4px 14px rgba(194,82,42,.35);
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-auth::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.2) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform .4s;
+}
+.btn-auth:hover::after { transform: translateX(100%); }
+.btn-auth:hover {
+  background: var(--rust-hover);
+  box-shadow: 0 6px 20px rgba(194,82,42,.45);
+  transform: translateY(-1px);
+}
+.btn-auth:active { transform: scale(.97); }
+.btn-auth:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Loading spinner inside button */
+.auth-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── 15. Switch Link ────────────────────────────────────────────── */
+.auth-switch {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: -4px;
+}
+.auth-switch-link {
+  color: var(--rust);
+  font-weight: 700;
+  text-decoration: none;
+}
+.auth-switch-link:hover { text-decoration: underline; }
+
+/* ── 16. Footer ─────────────────────────────────────────────────── */
+.auth-footer {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+  letter-spacing: .04em;
+}
+
+/* ── 17. Dark mode toggle button ────────────────────────────────── */
+.auth-theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all var(--t);
+  box-shadow: var(--shadow);
+  z-index: 100;
+}
+.auth-theme-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--rust);
+}
+
+/* Sun/Moon transition */
+.auth-theme-sun,
+.auth-theme-moon {
+  position: absolute;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.auth-theme-sun  { opacity: 1; transform: scale(1); }
+.auth-theme-moon { opacity: 0; transform: scale(.5); }
+
+.dark-mode .auth-theme-sun  { opacity: 0; transform: scale(.5); }
+.dark-mode .auth-theme-moon { opacity: 1; transform: scale(1); }
+
+/* ── 18. Responsive ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .auth-card { padding: 28px 22px 24px; }
+  .auth-title { font-size: 24px; }
+}
+
+/* ── Scrollable auth page (for register page) ───────────────────── */
+.auth-body-scroll {
+  align-items: flex-start;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+.auth-body-scroll::-webkit-scrollbar { width: 6px; }
+.auth-body-scroll::-webkit-scrollbar-track { background: transparent; }
+.auth-body-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 3px;
+}
+
+/* Scroll down hint arrow — shown at bottom of register card */
+.scroll-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-faint);
+  animation: bounceDown 1.5s ease-in-out infinite;
+  margin-top: -8px;
+  display: block;
+}
+@keyframes bounceDown {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
+}

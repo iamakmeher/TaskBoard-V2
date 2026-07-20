@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/><title>Find Data</title>
+<style>
+body{font-family:sans-serif;background:#0f0f1a;color:#fff;padding:30px;min-height:100vh}
+.box{background:#1a1a2e;border-radius:12px;padding:20px;margin:12px 0}
+.key{color:#4af;font-weight:700}
+.val{color:#aaa;font-size:12px;word-break:break-all;margin-top:4px}
+.task{background:#16213e;border-radius:8px;padding:10px 14px;margin:4px 0;font-size:13px}
+h2{color:#fff;margin-bottom:4px}
+p{color:#aaa}
+.btn{background:#4caf50;color:#fff;border:none;padding:12px 28px;border-radius:99px;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px;display:inline-block}
+</style>
+</head>
+<body>
+<h2>🔍 Scanning ALL browser storage for your tasks...</h2>
+<p>Checking every possible place your data could be stored.</p>
+<div id="output"></div>
+
+<script>
+var out = document.getElementById('output');
+var found = [];
+
+// Scan ALL localStorage keys
+var allKeys = [];
+for(var i=0;i<localStorage.length;i++) allKeys.push(localStorage.key(i));
+
+var html = '<div class="box"><h3>📦 All localStorage keys found: ' + allKeys.length + '</h3>';
+allKeys.forEach(function(k) {
+  var val = localStorage.getItem(k);
+  html += '<div style="margin:8px 0"><span class="key">' + k + '</span>';
+  html += '<div class="val">' + (val||'').slice(0,150) + (val&&val.length>150?'...':'') + '</div></div>';
+});
+html += '</div>';
+
+// Check specifically for tasks
+var taskKeys = allKeys.filter(function(k){ return k.toLowerCase().includes('task'); });
+if(taskKeys.length > 0) {
+  taskKeys.forEach(function(k) {
+    try {
+      var data = JSON.parse(localStorage.getItem(k));
+      if(Array.isArray(data) && data.length > 0) {
+        found = found.concat(data);
+        html += '<div class="box" style="border:2px solid #4caf50">';
+        html += '<h3 style="color:#4caf50">✅ Found ' + data.length + ' items in key: ' + k + '</h3>';
+        data.slice(0,5).forEach(function(t) {
+          if(t.text) html += '<div class="task">' + t.text + '</div>';
+        });
+        if(data.length > 5) html += '<div class="task" style="color:#aaa">...and ' + (data.length-5) + ' more</div>';
+        html += '</div>';
+      }
+    } catch(e){}
+  });
+}
+
+if(found.length === 0) {
+  html += '<div class="box" style="border:2px solid #e94560">';
+  html += '<h3 style="color:#e94560">❌ No task data found anywhere in this browser.</h3>';
+  html += '<p style="color:#aaa">Your data was only in this browser and was cleared when localStorage was reset. Unfortunately this cannot be recovered.</p>';
+  html += '<p style="color:#aaa;margin-top:8px">You can start fresh — all the TaskBoard features are still working perfectly.</p>';
+  html += '<a href="index.html" class="btn" style="background:#555">Start Fresh →</a>';
+  html += '</div>';
+} else {
+  // Save found data back
+  localStorage.setItem('taskboard-tasks', JSON.stringify(found));
+  html += '<div class="box" style="border:2px solid #4caf50">';
+  html += '<h3 style="color:#4caf50">✅ Data restored! Click below to go back.</h3>';
+  html += '<a href="index.html" class="btn">→ Open TaskBoard</a>';
+  html += '</div>';
+}
+
+out.innerHTML = html;
+</script>
+</body>
+</html>
