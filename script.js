@@ -1704,6 +1704,9 @@ $(function () {
     } catch(e) {}
   });
 
+  // Ensure profile dropdown is hidden on page load
+  $('#profile-dropdown').hide();
+
   // ── Toggle dropdown open/close ──
   $('#profile-avatar-btn').on('click', function (e) {
     e.stopPropagation();
@@ -1713,6 +1716,11 @@ $(function () {
     } else {
       $dropdown.fadeIn(180);
     }
+  });
+
+  // Close dropdown when clicking links inside it
+  $('#profile-dropdown').on('click', 'a, button', function () {
+    $('#profile-dropdown').hide();
   });
 
   // Close dropdown when clicking anywhere else
