@@ -529,7 +529,10 @@ html.dark .export-btn-csv { background: rgba(22,163,74,.08); border-color: rgba(
 @media (max-width: 768px) {
   .export-btn-group { min-width: 100%; }
   .settings-container { padding: 16px 12px !important; }
-  .settings-nav-inner { padding: 0 12px !important; }
+  .settings-nav-inner { padding: 0 10px !important; height: 52px !important; gap: 8px !important; }
+  .btn-back           { padding: 5px 10px !important; font-size: 12px !important; }
+  .settings-nav-name  { font-size: 16px !important; }
+  .settings-theme-btn { width: 34px !important; height: 34px !important; }
   .settings-card { padding: 16px 14px !important; }
   .color-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
 }

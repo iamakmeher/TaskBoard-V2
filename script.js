@@ -133,6 +133,16 @@ $(function () {
     return dd + '/' + mm + '/' + yy + ' ' + hh + ':' + min + ' ' + ampm;
   }
 
+  /**
+   * Short Date helper: e.g. 21 Jul
+   */
+  function formatDateShort(ts) {
+    if (!ts) return '';
+    var d = new Date(ts);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return d.getDate() + ' ' + months[d.getMonth()];
+  }
+
   /* ──────────────────────────────────────────────────────────────
      3b. TIME AGO
      Returns "2 hours ago", "just now", "3 days ago" etc.
@@ -266,12 +276,18 @@ $(function () {
     /* Timestamps block */
     var $ts = $('<div class="task-timestamps">');
 
-    /* "Added" timestamp — always shown */
+    /* Clean vector SVG calendar icon (no static 17 graphic) */
+    var calendarIconSvg = '<svg class="ts-calendar-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+    /* "Added" timestamp — shows clean SVG calendar icon + real date (e.g. 21 Jul) */
     if (task.createdAt) {
       var $created = $('<span class="task-ts task-ts-created">');
+      var dateStr = formatDateShort(task.createdAt);
+      var relStr  = timeAgo(task.createdAt);
+      var displayTs = relStr === 'just now' ? dateStr + ' (just now)' : dateStr + ' • ' + relStr;
       $created.html(
-        '<span class="task-ts-icon">📅</span>' +
-        'Added: ' + timeAgo(task.createdAt)
+        '<span class="task-ts-icon">' + calendarIconSvg + '</span>' +
+        'Added: ' + displayTs
       );
       $ts.append($created);
     }

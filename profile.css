@@ -822,7 +822,10 @@ html.dark .photo-preview-wrap  { background: var(--parchment-3); border-color: v
   .pf-avatar-initials { font-size: 24px; }
   .pf-field-row       { flex-direction: column; }
   .pf-save-btn        { width: 100%; }
-  .profile-nav-inner  { padding: 0 14px; }
+  .profile-nav-inner  { padding: 0 10px; height: 52px; gap: 8px; }
+  .btn-back           { padding: 5px 10px; font-size: 12px; }
+  .profile-nav-name   { font-size: 16px; }
+  .profile-theme-btn { width: 34px; height: 34px; }
   .photo-source-grid  { grid-template-columns: repeat(2, 1fr); }
   .pf-signout-inner   { flex-direction: column; align-items: flex-start; }
   .pf-signout-btn     { width: 100%; flex-direction: row; gap: 10px; padding: 14px 20px; }
