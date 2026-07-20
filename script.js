@@ -335,7 +335,7 @@ $(function () {
           // Never edited — show added date
           $subTs
             .addClass('subtask-ts-added')
-            .html('📅 Added: ' + timeAgo(sub.createdAt));
+            .html(calendarIconSvg + ' Added: ' + formatDateShort(sub.createdAt) + ' • ' + timeAgo(sub.createdAt));
         }
 
         // Sub-task action buttons (edit + delete) — hidden until hover

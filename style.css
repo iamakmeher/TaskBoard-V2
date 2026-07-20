@@ -3513,8 +3513,8 @@ html, body {
     align-items: center !important;
     justify-content: space-between !important;
     margin-top: 6px !important;
-    padding-top: 6px !important;
-    border-top: 1px dashed var(--line) !important;
+    padding-top: 0 !important;
+    border-top: none !important;
   }
 
   /* Priority Select Pills in Add Form */
