@@ -827,3 +827,9 @@ html.dark .photo-preview-wrap  { background: var(--parchment-3); border-color: v
   .pf-signout-inner   { flex-direction: column; align-items: flex-start; }
   .pf-signout-btn     { width: 100%; flex-direction: row; gap: 10px; padding: 14px 20px; }
 }
+
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
