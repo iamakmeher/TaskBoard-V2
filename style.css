@@ -1147,14 +1147,17 @@ body::before {
 
 /* Sub-task text */
 .subtask-text {
-  font-family: var(--font-hand);   /* matches main task title font (Caveat) */
-  font-size: 17px;                 /* slightly larger to match handwritten feel */
+  font-family: var(--font-hand);
+  font-size: 17px;
   font-weight: 600;
   color: var(--ink-mid);
-  line-height: 1.5;
-  flex: 1;
-  white-space: pre-wrap;           /* renders \n as visible line breaks */
-  word-break: break-word;
+  line-height: 1.4;
+  flex: 1 1 auto;
+  min-width: 0 !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+  word-wrap: break-word !important;
+  white-space: pre-wrap;
   transition: color var(--t);
 }
 .subtask-row.subtask-done .subtask-text {
@@ -3515,6 +3518,45 @@ html, body {
     margin-top: 6px !important;
     padding-top: 0 !important;
     border-top: none !important;
+  }
+
+  /* Sub-task Items / Cards on Mobile */
+  .subtask-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    padding: 8px 10px !important;
+    gap: 6px 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .subtask-checkbox {
+    flex: 0 0 17px !important;
+    margin-top: 3px !important;
+  }
+  .subtask-text {
+    flex: 1 1 calc(100% - 30px) !important;
+    width: calc(100% - 30px) !important;
+    min-width: 0 !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    display: block !important;
+  }
+  .subtask-ts {
+    flex: 1 1 auto !important;
+    margin-left: 25px !important;
+    font-size: 10px !important;
+    margin-top: 2px !important;
+  }
+  .subtask-actions {
+    opacity: 1 !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
   }
 
   /* Priority Select Pills in Add Form */
