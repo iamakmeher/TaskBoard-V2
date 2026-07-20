@@ -1465,8 +1465,21 @@ $(function () {
     $('#header-date').text(getCurrentDateString());
   }, 60000);
 
-  // Footer: fixed branding text, not a date
-  $('#footer-date').text('AK Task Board');
+  // Dynamic footer branding function (e.g. Chinmaya TaskBoard or fallback to TaskBoard)
+  function updateFooterBranding(fullName) {
+    var footerEl = document.getElementById('footer-date');
+    if (!footerEl) return;
+    if (fullName && typeof fullName === 'string' && fullName.trim().length > 0) {
+      var firstName = fullName.trim().split(/\s+/)[0];
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+      footerEl.textContent = firstName + ' TaskBoard';
+    } else {
+      footerEl.textContent = 'TaskBoard';
+    }
+  }
+  window._updateFooterBranding = updateFooterBranding;
+
+  updateFooterBranding('');
 
   /* ──────────────────────────────────────────────────────────────
      16. DARK MODE TOGGLE
@@ -1569,11 +1582,12 @@ $(function () {
         // var workspaceEl = document.getElementById('brand-workspace');
         // if (workspaceEl) workspaceEl.textContent = username ? '@' + username : 'My Workspace';
 
-        // STEP 4: Fill dropdown name/email
+        // STEP 4: Fill dropdown name/email & update footer branding
         var dropName  = document.getElementById('profile-dropdown-name');
         var dropEmail = document.getElementById('profile-dropdown-email');
         if (dropName)  dropName.textContent  = name;
         if (dropEmail) dropEmail.textContent = email;
+        if (window._updateFooterBranding) window._updateFooterBranding(name);
 
         // STEP 5: Firestore in background
         try {
@@ -1581,16 +1595,17 @@ $(function () {
           var snap = await getDoc(doc(db, 'users', user.uid));
           if (snap.exists()) {
             var data = snap.data();
-            if (data.displayName && !localProfile.displayName) name = data.displayName;
-            if (data.username)    fsUsername = data.username;
+            if (data.displayName && !localProfile.displayName) {
+              name = data.displayName;
+              if (dropName) dropName.textContent = name;
+              if (window._updateFooterBranding) window._updateFooterBranding(name);
+            }
+            if (data.username) fsUsername = data.username;
             if (!localProfile.photoURL && data.photoURL) {
               photo = data.photoURL;
               applyPhotoNow(photo, initials);
             }
           }
-          // if (!username && fsUsername && workspaceEl) {
-          //   workspaceEl.textContent = '@' + fsUsername;
-          // }
         } catch(e) {}
 
         window._firebaseUser = user;
