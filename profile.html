@@ -358,7 +358,7 @@
 </div>
 <!-- /photo modal -->
 
-  <!-- Apply saved accent color and theme immediately -->
+  <!-- Apply saved accent color and theme immediately with live sync -->
   <script>
     (function() {
       var COLORS = {
@@ -372,22 +372,29 @@
         violet:{light:'#7c3aed',dark:'#c4b5fd'},fuchsia:{light:'#c026d3',dark:'#e879f9'},
         slate:{light:'#475569',dark:'#94a3b8'},gold:{light:'#b45309',dark:'#fcd34d'}
       };
-      try {
-        var s       = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
-        var isDark  = localStorage.getItem('taskboard-dark') === 'true';
-        var color   = s.color || 'teal';
-        if (isDark) document.documentElement.classList.add('dark');
-        var col  = COLORS[color] || COLORS.teal;
-        var c    = isDark ? col.dark : col.light;
-        var clit = c + '1a';
-        var chov = col.hover || c;
-        document.documentElement.style.setProperty('--accent',       c);
-        document.documentElement.style.setProperty('--accent-light', clit);
-        document.documentElement.style.setProperty('--accent-hover', chov);
-        document.documentElement.style.setProperty('--rust',         c);
-        document.documentElement.style.setProperty('--rust-light',   clit);
-        document.documentElement.style.setProperty('--rust-hover',   chov);
-      } catch(e) {}
+      function applyProfileTheme() {
+        try {
+          var s       = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
+          var isDark  = localStorage.getItem('taskboard-dark') === 'true';
+          var color   = s.color || 'teal';
+          document.documentElement.classList.toggle('dark', isDark);
+          var col  = COLORS[color] || COLORS.teal;
+          var c    = isDark ? col.dark : col.light;
+          var clit = c + '1a';
+          var chov = col.hover || c;
+          var r    = document.documentElement.style;
+          r.setProperty('--accent',       c);
+          r.setProperty('--accent-light', clit);
+          r.setProperty('--accent-hover', chov);
+          r.setProperty('--rust',         c);
+          r.setProperty('--rust-light',   clit);
+          r.setProperty('--rust-hover',   chov);
+        } catch(e) {}
+      }
+      applyProfileTheme();
+      window.addEventListener('storage', applyProfileTheme);
+      window.addEventListener('pageshow', applyProfileTheme);
+      window.addEventListener('focus', applyProfileTheme);
     })();
   </script>
   <script type="module" src="profile.js"></script>

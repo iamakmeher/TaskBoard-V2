@@ -97,6 +97,14 @@ function applySettings(settings) {
   const previewTexts = document.querySelectorAll('.preview-task-text');
   const previewSize  = { small: '13px', medium: '16px', large: '20px' }[s.font] || '16px';
   previewTexts.forEach(el => el.style.fontSize = previewSize);
+
+  // 6. Dispatch live theme change event for instant real-time sync across pages
+  try {
+    if (typeof window.applyGlobalThemeAndColors === 'function') {
+      window.applyGlobalThemeAndColors();
+    }
+    window.dispatchEvent(new Event('storage'));
+  } catch(e) {}
 }
 
 /* ── Mark active buttons ──────────────────────────────────────── */

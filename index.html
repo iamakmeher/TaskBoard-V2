@@ -14,68 +14,77 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
-  <!-- Apply saved appearance settings immediately (before render) -->
+  <!-- Inline theme initializer — runs before render to prevent color flash & syncs live -->
   <script>
     (function () {
       var COLORS = {
-        orange: { light: '#c2522a', dark: '#ff6a00', hover: '#a8421e' },
-        teal: { light: '#0d9488', dark: '#14b8a6', hover: '#0f766e' },
-        blue: { light: '#2563eb', dark: '#3b82f6', hover: '#1d4ed8' },
-        green: { light: '#16a34a', dark: '#22c55e', hover: '#15803d' },
-        purple: { light: '#7c3aed', dark: '#a78bfa', hover: '#6d28d9' },
-        pink: { light: '#db2777', dark: '#f472b6', hover: '#be185d' },
-        red: { light: '#dc2626', dark: '#f87171', hover: '#b91c1c' },
-        rose: { light: '#e11d48', dark: '#fb7185', hover: '#be123c' },
-        amber: { light: '#d97706', dark: '#fbbf24', hover: '#b45309' },
-        yellow: { light: '#ca8a04', dark: '#facc15', hover: '#a16207' },
-        lime: { light: '#65a30d', dark: '#a3e635', hover: '#4d7c0f' },
+        orange:  { light: '#c2522a', dark: '#ff6a00', hover: '#a8421e' },
+        teal:    { light: '#0d9488', dark: '#14b8a6', hover: '#0f766e' },
+        blue:    { light: '#2563eb', dark: '#3b82f6', hover: '#1d4ed8' },
+        green:   { light: '#16a34a', dark: '#22c55e', hover: '#15803d' },
+        purple:  { light: '#7c3aed', dark: '#a78bfa', hover: '#6d28d9' },
+        pink:    { light: '#db2777', dark: '#f472b6', hover: '#be185d' },
+        red:     { light: '#dc2626', dark: '#f87171', hover: '#b91c1c' },
+        rose:    { light: '#e11d48', dark: '#fb7185', hover: '#be123c' },
+        amber:   { light: '#d97706', dark: '#fbbf24', hover: '#b45309' },
+        yellow:  { light: '#ca8a04', dark: '#facc15', hover: '#a16207' },
+        lime:    { light: '#65a30d', dark: '#a3e635', hover: '#4d7c0f' },
         emerald: { light: '#059669', dark: '#34d399', hover: '#047857' },
-        cyan: { light: '#0891b2', dark: '#22d3ee', hover: '#0e7490' },
-        indigo: { light: '#4338ca', dark: '#818cf8', hover: '#3730a3' },
-        violet: { light: '#7c3aed', dark: '#c4b5fd', hover: '#6d28d9' },
+        cyan:    { light: '#0891b2', dark: '#22d3ee', hover: '#0e7490' },
+        indigo:  { light: '#4338ca', dark: '#818cf8', hover: '#3730a3' },
+        violet:  { light: '#7c3aed', dark: '#c4b5fd', hover: '#6d28d9' },
         fuchsia: { light: '#c026d3', dark: '#e879f9', hover: '#a21caf' },
-        slate: { light: '#475569', dark: '#94a3b8', hover: '#334155' },
-        gold: { light: '#b45309', dark: '#fcd34d', hover: '#92400e' }
+        slate:   { light: '#475569', dark: '#94a3b8', hover: '#334155' },
+        gold:    { light: '#b45309', dark: '#fcd34d', hover: '#92400e' }
       };
       var FONT_SIZES = { small: '13px', medium: '15px', large: '17px' };
-      var DENSITY = { compact: '8px', normal: '14px', comfortable: '22px' };
-      try {
-        var s = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
-        var theme = s.theme || 'light';
-        var color = s.color || 'teal';
-        var font = s.font || 'medium';
-        var density = s.density || 'normal';
+      var DENSITY    = { compact: '8px', normal: '14px', comfortable: '22px' };
 
-        // Theme
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var isDark = theme === 'dark' || (theme === 'system' && prefersDark);
-        if (isDark) document.documentElement.classList.add('dark');
-        localStorage.setItem('taskboard-dark', String(isDark));
+      window.applyGlobalThemeAndColors = function () {
+        try {
+          var s       = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
+          var theme   = s.theme || 'light';
+          var color   = s.color || 'teal';
+          var font    = s.font || 'medium';
+          var density = s.density || 'normal';
 
-        // Accent color — set BOTH --accent AND --rust vars directly
-        var col = COLORS[color] || COLORS.teal;
-        var c = isDark ? col.dark : col.light;
-        var clit = c + '1a';
-        var chov = col.hover || c;
-        document.documentElement.style.setProperty('--accent', c);
-        document.documentElement.style.setProperty('--accent-light', clit);
-        document.documentElement.style.setProperty('--accent-hover', chov);
-        document.documentElement.style.setProperty('--rust', c);
-        document.documentElement.style.setProperty('--rust-light', clit);
-        document.documentElement.style.setProperty('--rust-hover', chov);
-        // Also set dark mode accent vars directly so dark mode works too
-        document.documentElement.style.setProperty('--dm-accent', c);
-        document.documentElement.style.setProperty('--dm-accent-2', chov);
-        document.documentElement.style.setProperty('--dm-accent-glow', c + '38');
-        document.documentElement.style.setProperty('--dm-accent-deep', c + '1a');
+          var mainPageDark = localStorage.getItem('taskboard-dark');
+          var prefersDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark       = mainPageDark !== null ? mainPageDark === 'true' : (theme === 'dark' || (theme === 'system' && prefersDark));
 
-        // Font size
-        document.documentElement.style.setProperty('--app-font-size', FONT_SIZES[font] || '15px');
+          document.documentElement.classList.toggle('dark', isDark);
 
-        // Density
-        document.documentElement.style.setProperty('--task-card-spacing', DENSITY[density] || '14px');
+          var col  = COLORS[color] || COLORS.teal;
+          var c    = isDark ? col.dark : col.light;
+          var clit = c + '1a';
+          var chov = col.hover || c;
 
-      } catch (e) { }
+          var root = document.documentElement.style;
+          root.setProperty('--accent',       c);
+          root.setProperty('--accent-light', clit);
+          root.setProperty('--accent-hover', chov);
+          root.setProperty('--rust',         c);
+          root.setProperty('--rust-light',   clit);
+          root.setProperty('--rust-hover',   chov);
+          root.setProperty('--dm-accent',      c);
+          root.setProperty('--dm-accent-2',    chov);
+          root.setProperty('--dm-accent-glow', c + '38');
+          root.setProperty('--dm-accent-deep', c + '1a');
+          root.setProperty('--app-font-size', FONT_SIZES[font] || '15px');
+          root.setProperty('--task-card-spacing', DENSITY[density] || '14px');
+        } catch (e) { }
+      };
+
+      // Run immediately on load
+      window.applyGlobalThemeAndColors();
+
+      // Listen for all storage & navigation events so changes apply LIVE without refresh
+      window.addEventListener('storage', window.applyGlobalThemeAndColors);
+      window.addEventListener('pageshow', window.applyGlobalThemeAndColors);
+      window.addEventListener('focus', window.applyGlobalThemeAndColors);
+      window.addEventListener('visibilitychange', function() {
+        if (!document.hidden) window.applyGlobalThemeAndColors();
+      });
     })();
   </script>
 
