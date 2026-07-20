@@ -264,18 +264,26 @@ function checkPasswordStrength(password) {
   const text = document.getElementById('strength-text');
   if (!wrap || !text) return;
 
-  let strength = 0;
-  if (password.length >= 6)                          strength++;
-  if (password.length >= 10)                         strength++;
-  if (/[A-Z]/.test(password) && /[0-9]/.test(password)) strength++;
-
   wrap.className = 'password-strength';
-  if (password.length === 0) {
+
+  if (!password || password.length === 0) {
     text.textContent = '';
-  } else if (strength === 1) {
+    return;
+  }
+
+  // Calculate strength score
+  let score = 0;
+  if (password.length >= 6)           score++;
+  if (password.length >= 10)          score++;
+  if (/[A-Z]/.test(password))         score++;
+  if (/[a-z]/.test(password))         score++;
+  if (/[0-9]/.test(password))         score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (password.length < 6 || score <= 2) {
     wrap.classList.add('strength-weak');
-    text.textContent = 'Weak password';
-  } else if (strength === 2) {
+    text.textContent = password.length < 6 ? 'Too short (min 6 characters)' : 'Weak password';
+  } else if (score >= 3 && score <= 4) {
     wrap.classList.add('strength-medium');
     text.textContent = 'Medium password';
   } else {
