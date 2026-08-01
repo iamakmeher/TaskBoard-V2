@@ -22,19 +22,29 @@ import {
   getDocs,
   deleteDoc,
   writeBatch,
-  serverTimestamp
+  serverTimestamp,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 /* ──────────────────────────────────────────────────────────────
-   1. CURRENT USER — stored globally once auth loads
+   1. CURRENT USER & LISTENERS — stored globally once auth loads
 ────────────────────────────────────────────────────────────── */
 let currentUser = null;
+let unsubscribeTasks = null;
+let unsubscribeBin = null;
+let unsubscribeUserDoc = null;
 
 /* ──────────────────────────────────────────────────────────────
    2. WAIT FOR AUTH — then sync tasks
 ────────────────────────────────────────────────────────────── */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
+    // Unsubscribe from any active listeners to clean up memory/connections
+    if (unsubscribeTasks) { unsubscribeTasks(); unsubscribeTasks = null; }
+    if (unsubscribeBin) { unsubscribeBin(); unsubscribeBin = null; }
+    if (unsubscribeUserDoc) { unsubscribeUserDoc(); unsubscribeUserDoc = null; }
+    currentUser = null;
+
     if (localStorage.getItem('resetting-password') === 'true') {
       console.log('Skipping redirect because password reset is in progress');
       return;
@@ -59,6 +69,9 @@ onAuthStateChanged(auth, async (user) => {
     // Already migrated — just load from Firestore
     await loadTasksFromFirestore(user);
   }
+
+  // Set up real-time listener updates
+  setupRealtimeListeners(user);
 });
 
 /* ──────────────────────────────────────────────────────────────
@@ -374,4 +387,91 @@ window.saveBoardsToFirestore = async function(boards, activeBoardId) {
 ────────────────────────────────────────────────────────────── */
 function markMigrated(user) {
   localStorage.setItem('taskboard-migrated-' + user.uid, 'true');
+}
+
+/* ──────────────────────────────────────────────────────────────
+   11. REAL-TIME FIRESTORE LISTENERS — Multi-Device Sync
+────────────────────────────────────────────────────────────── */
+function setupRealtimeListeners(user) {
+  if (unsubscribeTasks) unsubscribeTasks();
+  if (unsubscribeBin) unsubscribeBin();
+  if (unsubscribeUserDoc) unsubscribeUserDoc();
+
+  // Listen to tasks
+  unsubscribeTasks = onSnapshot(collection(db, 'users', user.uid, 'tasks'), (snapshot) => {
+    if (!window._firestoreReady) return;
+
+    const tasks = [];
+    snapshot.forEach((d) => tasks.push(d.data()));
+    // Sort tasks (newest first)
+    tasks.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    const newTasksJSON = JSON.stringify(tasks);
+    const oldTasksJSON = localStorage.getItem('taskboard-tasks') || '[]';
+
+    // Only update and re-render if the tasks have actually changed
+    if (newTasksJSON !== oldTasksJSON) {
+      console.log('🔄 Tasks updated in cloud, syncing to local storage and UI');
+      localStorage.setItem('taskboard-tasks', newTasksJSON);
+      if (typeof window._taskboardInit === 'function') {
+        window._taskboardInit();
+      }
+    }
+  }, (error) => {
+    console.error('Real-time tasks sync error:', error);
+  });
+
+  // Listen to bin
+  unsubscribeBin = onSnapshot(collection(db, 'users', user.uid, 'bin'), (snapshot) => {
+    if (!window._firestoreReady) return;
+
+    const binTasks = [];
+    snapshot.forEach((d) => binTasks.push(d.data()));
+
+    const newBinJSON = JSON.stringify(binTasks);
+    const oldBinJSON = localStorage.getItem('taskboard-bin') || '[]';
+
+    if (newBinJSON !== oldBinJSON) {
+      console.log('🔄 Recycle bin updated in cloud, syncing to local storage and UI');
+      localStorage.setItem('taskboard-bin', newBinJSON);
+      if (typeof window._taskboardInit === 'function') {
+        window._taskboardInit();
+      }
+    }
+  }, (error) => {
+    console.error('Real-time bin sync error:', error);
+  });
+
+  // Listen to user document (boards and activeBoardId)
+  unsubscribeUserDoc = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+    if (!window._firestoreReady) return;
+    if (!docSnap.exists()) return;
+
+    const userData = docSnap.data();
+    let boards = userData.boards || [];
+    let activeBoardId = userData.activeBoardId || 'default';
+
+    const newBoardsJSON = JSON.stringify(boards);
+    const oldBoardsJSON = localStorage.getItem('taskboard-boards') || '[]';
+    const oldActiveBoard = localStorage.getItem('taskboard-active-board') || 'default';
+
+    let changed = false;
+    if (newBoardsJSON !== oldBoardsJSON) {
+      localStorage.setItem('taskboard-boards', newBoardsJSON);
+      changed = true;
+    }
+    if (activeBoardId !== oldActiveBoard) {
+      localStorage.setItem('taskboard-active-board', activeBoardId);
+      changed = true;
+    }
+
+    if (changed) {
+      console.log('🔄 Boards or active board updated in cloud, syncing to local storage and UI');
+      if (typeof window._taskboardInit === 'function') {
+        window._taskboardInit();
+      }
+    }
+  }, (error) => {
+    console.error('Real-time user document sync error:', error);
+  });
 }

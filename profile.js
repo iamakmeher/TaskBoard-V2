@@ -767,6 +767,16 @@ onAuthStateChanged(auth, async (user) => {
     btn?.classList.add('pf-signout-loading');
     if (textEl) textEl.textContent = 'Signing out…';
     try {
+      // Clear user-specific task data from local storage on logout
+      localStorage.removeItem('taskboard-tasks');
+      localStorage.removeItem('taskboard-bin');
+      localStorage.removeItem('taskboard-boards');
+      localStorage.removeItem('taskboard-active-board');
+      for (let key in localStorage) {
+        if (key.startsWith('taskboard-migrated-')) {
+          localStorage.removeItem(key);
+        }
+      }
       localStorage.removeItem('resetting-password');
       await signOut(auth);
       window.location.href = 'login.html';

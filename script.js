@@ -1747,6 +1747,17 @@ $(function () {
 
   // ── Logout ──
   $('#btn-logout').on('click', function () {
+    // Clear user-specific task data from local storage on logout
+    localStorage.removeItem('taskboard-tasks');
+    localStorage.removeItem('taskboard-bin');
+    localStorage.removeItem('taskboard-boards');
+    localStorage.removeItem('taskboard-active-board');
+    for (var key in localStorage) {
+      if (key.indexOf('taskboard-migrated-') === 0) {
+        localStorage.removeItem(key);
+      }
+    }
+
     var script = document.createElement('script');
     script.type = 'module';
     script.textContent = `
