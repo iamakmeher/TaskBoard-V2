@@ -112,9 +112,23 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 - Visual Studio Code
 ## 📸 Application Screenshots
 
+## 📸 Application Screenshots
+
 ### 🏠 Home Dashboard
 
 ![Home Dashboard](assets/screenshots/home.png)
+
+---
+
+### 📋 Task Dashboard
+
+![Task Dashboard](assets/screenshots/home1.png)
+
+---
+
+### 📊 Task Analytics / Overview
+
+![Task Analytics](assets/screenshots/home2.png)
 
 ---
 
@@ -124,21 +138,51 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 
 ---
 
-### 📝 Register Page
+### 📝 Create Account
 
-![Register Page](assets/screenshots/register.png)
-
----
-
-### 👤 Profile Page
-
-![Profile Page](assets/screenshots/profile.png)
+![Create Account](assets/screenshots/register.png)
 
 ---
 
-### ⚙️ Settings Page
+### 👤 User Profile
 
-![Settings Page](assets/screenshots/settings.png)
+![User Profile](assets/screenshots/profile.png)
+
+---
+
+### 👤 Profile Customization
+
+![Profile Customization](assets/screenshots/profile1.png)
+
+---
+
+### 👤 Profile Settings
+
+![Profile Settings](assets/screenshots/profile2.png)
+
+---
+
+### ⚙️ Settings
+
+![Settings](assets/screenshots/settings.png)
+
+---
+
+### 🎨 Theme Settings
+
+![Theme Settings](assets/screenshots/settings1.png)
+
+---
+
+### 🎨 Appearance Settings
+
+![Appearance Settings](assets/screenshots/settings2.png)
+
+---
+
+### ⚙️ Advanced Settings
+
+![Advanced Settings](assets/screenshots/settings3.png)
 
 ---
 
@@ -151,37 +195,66 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 ### 📱 Mobile View
 
 ![Mobile View](assets/screenshots/mobile-view.jpg)
+
+---
+
+### 📱 Mobile Dashboard
+
+![Mobile Dashboard](assets/screenshots/mobile-view1.jpg)
 ## 📂 Project Structure
 ```text
-TaskBoard-V2/
+## 📂 Project Structure
+
+```text
+Task_View/
 │
 ├── assets/
 │   └── screenshots/
-│
-├── css/
-│   ├── style.css
-│   ├── auth.css
-│   ├── profile.css
-│   └── settings.css
-│
-├── js/
-│   ├── script.js
-│   ├── auth.js
-│   ├── firebase.js
-│   ├── firestore-sync.js
-│   ├── profile.js
-│   └── settings.js
+│       ├── home.png
+│       ├── home1.png
+│       ├── home2.png
+│       ├── login.png
+│       ├── register.png
+│       ├── profile.png
+│       ├── profile1.png
+│       ├── profile2.png
+│       ├── settings.png
+│       ├── settings1.png
+│       ├── settings2.png
+│       ├── settings3.png
+│       ├── dark-mode.png
+│       ├── mobile-view.jpg
+│       └── mobile-view1.jpg
 │
 ├── index.html
 ├── login.html
 ├── register.html
 ├── profile.html
 ├── settings.html
-├── manifest.json
+├── finddata.html
+├── recover.html
+│
+├── style.css
+├── auth.css
+├── profile.css
+├── settings.css
+│
+├── script.js
+├── auth.js
+├── profile.js
+├── settings.js
+├── firebase.js
+├── firestore-sync.js
 ├── service-worker.js
+│
+├── manifest.json
+├── favicon.ico
+├── icon-192.png
+├── icon-512.png
 ├── FIRESTORE_RULES.txt
-├── README.md
-└── favicon.ico
+├── .gitignore
+├── netlify.toml
+└── README.md
 ```
 ## ⚙️ Installation & Setup
 
