@@ -84,6 +84,23 @@ import {
       const s = JSON.parse(localStorage.getItem('taskboard-settings') || '{}');
       s.theme = d ? 'dark' : 'light';
       localStorage.setItem('taskboard-settings', JSON.stringify(s));
+
+      const color = s.color || 'teal';
+      const col = COLORS[color] || COLORS.teal;
+      const cMain = d ? col.dark : col.light;
+      const cLite = d ? `${col.dark}1a` : `${col.light}1a`;
+      const cHov = col.hover || cMain;
+      const root = document.documentElement.style;
+      root.setProperty('--accent',       cMain);
+      root.setProperty('--accent-light', cLite);
+      root.setProperty('--accent-hover', cHov);
+      root.setProperty('--rust',         cMain);
+      root.setProperty('--rust-light',   cLite);
+      root.setProperty('--rust-hover',   cHov);
+      root.setProperty('--dm-accent',      cMain);
+      root.setProperty('--dm-accent-2',    cHov);
+      root.setProperty('--dm-accent-glow', cMain + '38');
+      root.setProperty('--dm-accent-deep', cMain + '1a');
     } catch(e) {}
   });
 })();

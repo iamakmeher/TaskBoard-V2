@@ -405,11 +405,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
 
     var pg = [
-      '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>TaskBoard Export</title></head>',
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Task View Export</title></head>',
       '<body style="font-family:Georgia,serif;margin:0;padding:40px 32px;background:#fdf9f0;color:#2c2416">',
       '<div style="max-width:860px;margin:0 auto">',
       '<div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:3px solid ',accent,';margin-bottom:24px">',
-      '<div><div style="font-size:26px;font-weight:700">Task<span style="color:',accent,'">Board</span></div>',
+      '<div><div style="font-size:26px;font-weight:700">Task<span style="color:',accent,'">View</span></div>',
       '<div style="font-size:12px;color:#999;margin-top:4px">Exported ',ds,'</div></div>',
       '<div style="text-align:right"><div style="font-size:36px;font-weight:700;color:',accent,'">',pct,'%</div>',
       '<div style="font-size:12px;color:#999">',done,' / ',total,' done</div></div></div>',
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
       '<th style="padding:10px 8px;width:130px;text-align:left">ADDED</th>',
       '</tr></thead><tbody>',rows,'</tbody></table>',
       '<div style="margin-top:32px;padding-top:14px;border-top:1px solid #ede8d8;display:flex;justify-content:space-between;font-size:11px;color:#bbb">',
-      '<span>TaskBoard - Personal Task Manager</span>',
+      '<span>Task View - Personal Task Manager</span>',
       '<span>Total: ',total,' | Done: ',done,' | Active: ',(total-done),'</span></div>',
       '<div style="text-align:center;margin-top:28px">',
       '<button onclick="window.print()" style="background:',accent,';color:#fff;border:none;padding:12px 32px;font-size:15px;font-weight:700;border-radius:99px;cursor:pointer">Print / Save as PDF</button>',

@@ -1388,8 +1388,8 @@ $(function () {
     $('#progress-bar').css('width', pct + '%');
     $('#progress-label').text(pct + '%');
 
-    // Tab title — always show plain TaskBoard
-    document.title = 'TaskBoard';
+    // Tab title — always show plain Task View
+    document.title = 'Task View';
 
     // Show celebration toast when ALL tasks are completed (and at least 1 exists)
     if (total > 0 && pct === 100) {
@@ -1503,9 +1503,9 @@ $(function () {
     if (fullName && typeof fullName === 'string' && fullName.trim().length > 0) {
       var firstName = fullName.trim().split(/\s+/)[0];
       firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-      footerEl.textContent = firstName + ' TaskBoard';
+      footerEl.textContent = firstName + ' Task View';
     } else {
-      footerEl.textContent = 'TaskBoard';
+      footerEl.textContent = 'Task View';
     }
   }
   window._updateFooterBranding = updateFooterBranding;
@@ -1542,6 +1542,10 @@ $(function () {
       st.theme = nowDark ? 'dark' : 'light';
       localStorage.setItem('taskboard-settings', JSON.stringify(st));
     } catch(e) {}
+    // Call global theme and colors to update CSS variables dynamically
+    if (typeof window.applyGlobalThemeAndColors === 'function') {
+      window.applyGlobalThemeAndColors();
+    }
   });
 
   /* ──────────────────────────────────────────────────────────────
@@ -2313,11 +2317,11 @@ window.exportPDF = function() {
   }).join('');
 
   var pg = [
-    '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>TaskBoard Export</title></head>',
+    '<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Task View Export</title></head>',
     '<body style="font-family:Georgia,serif;margin:0;padding:40px 32px;background:#fdf9f0;color:#2c2416">',
     '<div style="max-width:860px;margin:0 auto">',
     '<div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:3px solid ',accent,';margin-bottom:24px">',
-    '<div><div style="font-size:26px;font-weight:700">Task<span style="color:',accent,'">Board</span></div>',
+    '<div><div style="font-size:26px;font-weight:700">Task<span style="color:',accent,'">View</span></div>',
     '<div style="font-size:12px;color:#999;margin-top:4px">Exported ',ds,'</div></div>',
     '<div style="text-align:right"><div style="font-size:36px;font-weight:700;color:',accent,'">',pct,'%</div>',
     '<div style="font-size:12px;color:#999">',done,' / ',total,' done</div></div></div>',
@@ -2332,7 +2336,7 @@ window.exportPDF = function() {
     '<th style="padding:10px 8px;width:130px;text-align:left">ADDED</th>',
     '</tr></thead><tbody>',rows,'</tbody></table>',
     '<div style="margin-top:32px;padding-top:14px;border-top:1px solid #ede8d8;display:flex;justify-content:space-between;font-size:11px;color:#bbb">',
-    '<span>TaskBoard - Personal Task Manager</span>',
+    '<span>Task View - Personal Task Manager</span>',
     '<span>Total: ',total,' | Done: ',done,' | Active: ',(total-done),'</span></div>',
     '<div style="text-align:center;margin-top:28px">',
     '<button onclick="window.print()" style="background:',accent,';color:#fff;border:none;padding:12px 32px;font-size:15px;font-weight:700;border-radius:99px;cursor:pointer">Print / Save as PDF</button>',
