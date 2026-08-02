@@ -822,8 +822,10 @@ html.dark .mini-cal-body {
   .main-layout {
     grid-template-columns: 1fr;
     padding: 20px 16px;
+    align-items: stretch !important;
   }
-  .left-panel { position: static; }
+  .left-panel { position: static; width: 100% !important; }
+  .right-panel { width: 100% !important; align-items: stretch !important; }
   .site-header-inner { gap: 14px; }
   .progress-wrap { max-width: 140px; }
   .header-date { display: none; }
@@ -3156,6 +3158,7 @@ html.dark .del-modal-cancel:hover {
   border-color: rgba(194, 82, 42, 0.25) !important;
 }
 
+
 /* Dark mode overrides for boards */
 html.dark .btn-add-board-toggle:hover {
   background: var(--dm-accent-deep);
@@ -3481,6 +3484,7 @@ html, body {
     padding: 12px 10px !important;
     gap: 14px !important;
     box-sizing: border-box !important;
+    align-items: stretch !important;
   }
 
   /* Left Panel / Sidebar */
@@ -3492,12 +3496,15 @@ html, body {
     box-sizing: border-box !important;
   }
 
-  /* Task Area */
-  .task-area {
+  /* Right Panel / Task Area */
+  .right-panel {
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
+    align-items: stretch !important;
   }
 
   /* Task Toolbar */
@@ -3507,7 +3514,8 @@ html, body {
     gap: 10px !important;
     width: 100% !important;
   }
-  .search-wrap,
+  .search-bar,
+  .search-box,
   .search-input {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -3533,6 +3541,11 @@ html, body {
     justify-content: center !important;
     font-size: 12px !important;
     padding: 8px 6px !important;
+  }
+
+  .empty-state {
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   /* Task Items / Cards */
