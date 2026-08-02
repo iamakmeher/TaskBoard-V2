@@ -112,8 +112,6 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 - Visual Studio Code
 ## 📸 Application Screenshots
 
-## 📸 Application Screenshots
-
 ### 🏠 Home Dashboard
 
 ![Home Dashboard](assets/screenshots/home.png)
@@ -126,9 +124,9 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 
 ---
 
-### 📊 Task Analytics / Overview
+### 📊 Task Overview
 
-![Task Analytics](assets/screenshots/home2.png)
+![Task Overview](assets/screenshots/home2.png)
 
 ---
 
@@ -150,9 +148,9 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 
 ---
 
-### 👤 Profile Customization
+### 👤 Edit Profile
 
-![Profile Customization](assets/screenshots/profile1.png)
+![Edit Profile](assets/screenshots/profile1.png)
 
 ---
 
@@ -192,18 +190,15 @@ Built as a Progressive Web Application (PWA), TaskView can be installed on deskt
 
 ---
 
-### 📱 Mobile View
+### 📱 Mobile Login View
 
-![Mobile View](assets/screenshots/mobile-view.jpg)
+![Mobile Login View](assets/screenshots/mobile-view.jpeg)
 
 ---
 
 ### 📱 Mobile Dashboard
 
-![Mobile Dashboard](assets/screenshots/mobile-view1.jpg)
-## 📂 Project Structure
-```text
-## 📂 Project Structure
+![Mobile Dashboard](assets/screenshots/mobile-view1.jpeg)## 📂 Project Structure
 
 ```text
 Task_View/
@@ -223,16 +218,16 @@ Task_View/
 │       ├── settings2.png
 │       ├── settings3.png
 │       ├── dark-mode.png
-│       ├── mobile-view.jpg
-│       └── mobile-view1.jpg
+│       ├── mobile-view.jpeg
+│       └── mobile-view1.jpeg
 │
 ├── index.html
 ├── login.html
 ├── register.html
 ├── profile.html
 ├── settings.html
-├── finddata.html
 ├── recover.html
+├── finddata.html
 │
 ├── style.css
 ├── auth.css
