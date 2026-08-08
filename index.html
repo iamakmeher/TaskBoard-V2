@@ -96,47 +96,6 @@
     })();
   </script>
 
-  <!-- Auto-recover data from Firestore if localStorage is empty -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const app = initializeApp({
-      apiKey: "AIzaSyBY2V3W_I6ryyDh413MuOSQun8s2F5mevY",
-      authDomain: "taskboard-21e77.firebaseapp.com",
-      projectId: "taskboard-21e77",
-      storageBucket: "taskboard-21e77.firebasestorage.app",
-      messagingSenderId: "234189363705",
-      appId: "1:234189363705:web:54e1d8193594c182758528"
-    });
-
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-      const existing = localStorage.getItem('taskboard-tasks');
-      const parsed = existing ? JSON.parse(existing) : [];
-      // Only recover if localStorage is empty
-      if (parsed.length > 0) return;
-      try {
-        const snap = await getDocs(collection(db, 'users', user.uid, 'tasks'));
-        const tasks = [];
-        snap.forEach(d => tasks.push(d.data()));
-        if (tasks.length > 0) {
-          localStorage.setItem('taskboard-tasks', JSON.stringify(tasks));
-          const binSnap = await getDocs(collection(db, 'users', user.uid, 'bin'));
-          const bin = [];
-          binSnap.forEach(d => bin.push(d.data()));
-          localStorage.setItem('taskboard-bin', JSON.stringify(bin));
-          localStorage.setItem('taskboard-migrated-' + user.uid, 'true');
-          // Reload page so script.js picks up the restored tasks
-          window.location.reload();
-        }
-      } catch (e) { console.log('Auto-recovery skipped:', e.message); }
-    });
-  </script>
 
 </head>
 
