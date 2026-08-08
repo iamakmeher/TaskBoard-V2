@@ -3666,4 +3666,84 @@ html, body {
   }
 }
 
+/* =================================================================
+   PWA UPDATE NOTIFICATION BANNER
+   ================================================================= */
+.pwa-update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 24px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.pwa-update-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pwa-update-icon {
+  font-size: 16px;
+  animation: pulse 1.5s infinite;
+}
+
+.btn-pwa-update {
+  background: #fff;
+  color: var(--accent);
+  border: none;
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  outline: none;
+}
+
+.btn-pwa-update:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+  .pwa-update-banner {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .btn-pwa-update {
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+}
+
 

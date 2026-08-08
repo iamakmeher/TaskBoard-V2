@@ -537,18 +537,64 @@
     </div>
   </div>
 
-  <!-- Register Service Worker -->
+  <!-- Register Service Worker & Handle Updates -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('service-worker.js')
           .then(function(reg) {
             console.log('Service Worker registered successfully with scope: ', reg.scope);
+
+            // Check if there is already a waiting service worker (e.g. from previous load)
+            if (reg.waiting) {
+              showUpdateBanner(reg.waiting);
+            }
+
+            // Listen for any new service worker updates being installed
+            reg.addEventListener('updatefound', () => {
+              const newWorker = reg.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showUpdateBanner(newWorker);
+                }
+              });
+            });
           })
           .catch(function(err) {
             console.log('Service Worker registration failed: ', err);
           });
       });
+
+      // Listen for the controller changing (new SW active) -> reload the page
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+
+    function showUpdateBanner(worker) {
+      // Create and show update banner at the top of the body
+      let banner = document.getElementById('pwa-update-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'pwa-update-banner';
+        banner.className = 'pwa-update-banner';
+        banner.innerHTML = `
+          <div class="pwa-update-content">
+            <span class="pwa-update-icon">✨</span>
+            <span class="pwa-update-text">A new version of TaskView is available!</span>
+          </div>
+          <button class="btn-pwa-update" id="btn-pwa-update">Update Now</button>
+        `;
+        document.body.insertBefore(banner, document.body.firstChild);
+      }
+      
+      document.getElementById('btn-pwa-update').onclick = () => {
+        worker.postMessage({ action: 'skipWaiting' });
+      };
     }
   </script>
 </body>

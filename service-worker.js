@@ -28,7 +28,7 @@ self.addEventListener('install', (e) => {
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[Service Worker] Caching files...');
       return cache.addAll(ASSETS);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
@@ -74,4 +74,11 @@ self.addEventListener('fetch', (e) => {
         return caches.match(e.request);
       })
   );
+});
+
+// Listen for messages from client page to trigger update immediately
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
