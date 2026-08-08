@@ -1,4 +1,4 @@
-const CACHE_NAME = 'taskview-v1';
+const CACHE_NAME = 'taskview-v2';
 const ASSETS = [
   './',
   'index.html',
