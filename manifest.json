@@ -1,11 +1,12 @@
 {
-  "name": "TaskBoard — jQuery Task Manager",
-  "short_name": "TaskBoard",
+  "name": "TaskView — Modern Task Manager",
+  "short_name": "TaskView",
   "description": "A responsive, modern task manager with real-time Firestore sync.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d9488",
   "theme_color": "#0d9488",
+  "orientation": "any",
   "icons": [
     {
       "src": "icon-192.png",
